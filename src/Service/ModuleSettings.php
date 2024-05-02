@@ -1,16 +1,16 @@
 <?php
 
 /**
- * Copyright © OXID eSales AG. All rights reserved.
+ * Copyright © Ginger. All rights reserved.
  * See LICENSE file for license details.
  */
 
 declare(strict_types=1);
 
-namespace OxidEsales\ModuleTemplate\Service;
+namespace GingerPayments\Payments\Service;
 
 use OxidEsales\EshopCommunity\Internal\Framework\Module\Facade\ModuleSettingServiceInterface;
-use OxidEsales\ModuleTemplate\Core\Module;
+use GingerPayments\Payments\Core\Module;
 
 /**
  * @extendable-class

@@ -1,23 +1,23 @@
 <?php
 
 /**
- * Copyright © OXID eSales AG. All rights reserved.
+ * Copyright © Ginger. All rights reserved.
  * See LICENSE file for license details.
  */
 
 declare(strict_types=1);
 
-namespace OxidEsales\ModuleTemplate\Controller;
+namespace GingerPayments\Payments\Controller;
 
 use OxidEsales\Eshop\Application\Controller\FrontendController;
 use OxidEsales\Eshop\Application\Model\User as EshopModelUser;
-use OxidEsales\ModuleTemplate\Core\Module as ModuleCore;
-use OxidEsales\ModuleTemplate\Model\GreetingTracker;
-use OxidEsales\ModuleTemplate\Model\User as TemplateModelUser;
-use OxidEsales\ModuleTemplate\Service\GreetingMessage;
-use OxidEsales\ModuleTemplate\Service\ModuleSettings;
-use OxidEsales\ModuleTemplate\Service\Repository;
-use OxidEsales\ModuleTemplate\Traits\ServiceContainer;
+use GingerPayments\Payments\Core\Module as ModuleCore;
+use GingerPayments\Payments\Model\GreetingTracker;
+use GingerPayments\Payments\Model\User as TemplateModelUser;
+use GingerPayments\Payments\Service\GreetingMessage;
+use GingerPayments\Payments\Service\ModuleSettings;
+use GingerPayments\Payments\Service\Repository;
+use GingerPayments\Payments\Traits\ServiceContainer;
 
 /**
  * @extendable-class
@@ -36,7 +36,7 @@ class GreetingController extends FrontendController
      *
      * @var string
      */
-    protected $_sThisTemplate = '@oe_moduletemplate/templates/greetingtemplate';
+    protected $_sThisTemplate = '@modules_GingerPayments-oxid/templates/greetingtemplate';
 
     /**
      * Rendering method.

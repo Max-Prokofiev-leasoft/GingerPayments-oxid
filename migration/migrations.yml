@@ -1,4 +1,4 @@
 table_storage:
-  table_name: oxmigrations_oe_moduletemplate
+  table_name: oxmigrations_modules_GingerPayments-oxid
 migrations_paths:
-  'OxidEsales\ModuleTemplate\Migrations': data
+  'GingerPayments\Payments\Migrations': data

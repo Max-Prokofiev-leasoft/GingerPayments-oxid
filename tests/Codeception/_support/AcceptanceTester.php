@@ -1,18 +1,18 @@
 <?php
 
 /**
- * Copyright © OXID eSales AG. All rights reserved.
+ * Copyright © Ginger. All rights reserved.
  * See LICENSE file for license details.
  */
 
 declare(strict_types=1);
 
-namespace OxidEsales\ModuleTemplate\Tests\Codeception;
+namespace GingerPayments\Payments\Tests\Codeception;
 
 use Codeception\Util\Fixtures;
 use OxidEsales\Codeception\Page\Home;
 use OxidEsales\Facts\Facts;
-use OxidEsales\ModuleTemplate\Service\ModuleSettings;
+use GingerPayments\Payments\Service\ModuleSettings;
 use OxidEsales\EshopCommunity\Internal\Container\ContainerFactory;
 
 /**

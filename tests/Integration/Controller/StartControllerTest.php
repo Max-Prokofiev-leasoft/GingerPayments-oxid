@@ -1,20 +1,20 @@
 <?php
 
 /**
- * Copyright © OXID eSales AG. All rights reserved.
+ * Copyright © Ginger. All rights reserved.
  * See LICENSE file for license details.
  */
 
 declare(strict_types=1);
 
-namespace OxidEsales\ModuleTemplate\Tests\Integration\Controller;
+namespace GingerPayments\Payments\Tests\Integration\Controller;
 
 use OxidEsales\Eshop\Application\Controller\StartController as EshopStartController;
 use OxidEsales\Eshop\Application\Model\User as EshopModelUser;
 use OxidEsales\Eshop\Core\Registry as EshopRegistry;
-use OxidEsales\ModuleTemplate\Service\ModuleSettings;
-use OxidEsales\ModuleTemplate\Tests\Integration\IntegrationTestCase;
-use OxidEsales\ModuleTemplate\Traits\ServiceContainer;
+use GingerPayments\Payments\Service\ModuleSettings;
+use GingerPayments\Payments\Tests\Integration\IntegrationTestCase;
+use GingerPayments\Payments\Traits\ServiceContainer;
 
 /*
  * Here we have full integration test cases for a what we call 'chain extended' shop class.

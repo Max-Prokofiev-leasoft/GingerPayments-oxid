@@ -3,8 +3,8 @@ services:
     autowire: true
     public: false
 
-  OxidEsales\ModuleTemplate\Command\ReadLogsCommand:
-    class: OxidEsales\ModuleTemplate\Command\ReadLogsCommand
+  GingerPayments\Payments\Command\ReadLogsCommand:
+    class: GingerPayments\Payments\Command\ReadLogsCommand
     arguments:
       $logFilePath: '%app.log_file_path%'
     tags:

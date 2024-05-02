@@ -1,16 +1,16 @@
 <?php
 
 /**
- * Copyright © OXID eSales AG. All rights reserved.
+ * Copyright © Ginger. All rights reserved.
  * See LICENSE file for license details.
  */
 
 declare(strict_types=1);
 
-namespace OxidEsales\ModuleTemplate\Model;
+namespace GingerPayments\Payments\Model;
 
-use OxidEsales\ModuleTemplate\Service\BasketItemLogger;
-use OxidEsales\ModuleTemplate\Traits\ServiceContainer;
+use GingerPayments\Payments\Service\BasketItemLogger;
+use GingerPayments\Payments\Traits\ServiceContainer;
 
 /**
  * @see \OxidEsales\Eshop\Application\Model\Basket

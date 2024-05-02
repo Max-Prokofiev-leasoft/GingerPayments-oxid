@@ -1,20 +1,20 @@
 <?php
 
 /**
- * Copyright © OXID eSales AG. All rights reserved.
+ * Copyright © Ginger. All rights reserved.
  * See LICENSE file for license details.
  */
 
 declare(strict_types=1);
 
-namespace OxidEsales\ModuleTemplate\Tests\Integration\Subscriber;
+namespace GingerPayments\Payments\Tests\Integration\Subscriber;
 
 use OxidEsales\Eshop\Application\Model\User as EshopModelUser;
 use OxidEsales\EshopCommunity\Internal\Transition\ShopEvents\BeforeModelUpdateEvent;
-use OxidEsales\ModuleTemplate\Model\GreetingTracker;
-use OxidEsales\ModuleTemplate\Service\Tracker;
-use OxidEsales\ModuleTemplate\Subscriber\BeforeModelUpdate;
-use OxidEsales\ModuleTemplate\Tests\Integration\IntegrationTestCase;
+use GingerPayments\Payments\Model\GreetingTracker;
+use GingerPayments\Payments\Service\Tracker;
+use GingerPayments\Payments\Subscriber\BeforeModelUpdate;
+use GingerPayments\Payments\Tests\Integration\IntegrationTestCase;
 
 final class BeforeModelUpdateTest extends IntegrationTestCase
 {

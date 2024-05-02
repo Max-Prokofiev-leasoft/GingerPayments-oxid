@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright © OXID eSales AG. All rights reserved.
+ * Copyright © Ginger. All rights reserved.
  * See LICENSE file for license details.
  */
 
@@ -10,8 +10,8 @@ declare(strict_types=1);
 namespace OxidEsales\EshopCommunity\modules\oe\moduletemplate\tests\Unit\Service;
 
 use OxidEsales\EshopCommunity\Internal\Framework\Module\Facade\ModuleSettingService;
-use OxidEsales\ModuleTemplate\Core\Module;
-use OxidEsales\ModuleTemplate\Service\ModuleSettings;
+use GingerPayments\Payments\Core\Module;
+use GingerPayments\Payments\Service\ModuleSettings;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\String\UnicodeString;
 

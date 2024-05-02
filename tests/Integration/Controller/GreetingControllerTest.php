@@ -1,23 +1,23 @@
 <?php
 
 /**
- * Copyright © OXID eSales AG. All rights reserved.
+ * Copyright © Ginger. All rights reserved.
  * See LICENSE file for license details.
  */
 
 declare(strict_types=1);
 
-namespace OxidEsales\ModuleTemplate\Tests\Integration\Controller;
+namespace GingerPayments\Payments\Tests\Integration\Controller;
 
 use OxidEsales\Eshop\Application\Model\User as EshopModelUser;
-use OxidEsales\ModuleTemplate\Controller\GreetingController;
-use OxidEsales\ModuleTemplate\Core\Module as ModuleCore;
-use OxidEsales\ModuleTemplate\Model\GreetingTracker;
-use OxidEsales\ModuleTemplate\Model\User as ModuleUser;
-use OxidEsales\ModuleTemplate\Service\ModuleSettings;
-use OxidEsales\ModuleTemplate\Service\Repository;
-use OxidEsales\ModuleTemplate\Tests\Integration\IntegrationTestCase;
-use OxidEsales\ModuleTemplate\Traits\ServiceContainer;
+use GingerPayments\Payments\Controller\GreetingController;
+use GingerPayments\Payments\Core\Module as ModuleCore;
+use GingerPayments\Payments\Model\GreetingTracker;
+use GingerPayments\Payments\Model\User as ModuleUser;
+use GingerPayments\Payments\Service\ModuleSettings;
+use GingerPayments\Payments\Service\Repository;
+use GingerPayments\Payments\Tests\Integration\IntegrationTestCase;
+use GingerPayments\Payments\Traits\ServiceContainer;
 
 /*
  * We want to test controller behavior going 'full way'.
@@ -76,7 +76,7 @@ final class GreetingControllerTest extends IntegrationTestCase
             $controller->setUser($this->createTestUser());
         }
 
-        $this->assertSame('@oe_moduletemplate/templates/greetingtemplate', $controller->render());
+        $this->assertSame('@modules_GingerPayments-oxid/templates/greetingtemplate', $controller->render());
 
         $viewData = $controller->getViewData();
         $this->assertSame($expected['greeting'], $viewData[ModuleCore::OEMT_GREETING_TEMPLATE_VARNAME]);

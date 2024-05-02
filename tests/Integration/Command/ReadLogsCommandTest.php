@@ -1,18 +1,18 @@
 <?php
 
 /**
- * Copyright © OXID eSales AG. All rights reserved.
+ * Copyright © Ginger. All rights reserved.
  * See LICENSE file for license details.
  */
 
 declare(strict_types=1);
 
-namespace OxidEsales\ModuleTemplate\Tests\Integration\Command;
+namespace GingerPayments\Payments\Tests\Integration\Command;
 
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
-use OxidEsales\ModuleTemplate\Command\ReadLogsCommand;
-use OxidEsales\ModuleTemplate\Tests\Integration\IntegrationTestCase;
+use GingerPayments\Payments\Command\ReadLogsCommand;
+use GingerPayments\Payments\Tests\Integration\IntegrationTestCase;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 

@@ -1,19 +1,19 @@
 <?php
 
 /**
- * Copyright © OXID eSales AG. All rights reserved.
+ * Copyright © Ginger. All rights reserved.
  * See LICENSE file for license details.
  */
 
 declare(strict_types=1);
 
-namespace OxidEsales\ModuleTemplate\Controller;
+namespace GingerPayments\Payments\Controller;
 
 use OxidEsales\Eshop\Application\Model\User as EshopModelUser;
 use OxidEsales\Eshop\Core\Registry as EshopRegistry;
-use OxidEsales\ModuleTemplate\Service\GreetingMessage;
-use OxidEsales\ModuleTemplate\Service\ModuleSettings;
-use OxidEsales\ModuleTemplate\Traits\ServiceContainer;
+use GingerPayments\Payments\Service\GreetingMessage;
+use GingerPayments\Payments\Service\ModuleSettings;
+use GingerPayments\Payments\Traits\ServiceContainer;
 
 /**
  * @eshopExtension

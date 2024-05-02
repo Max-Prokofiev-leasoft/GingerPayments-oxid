@@ -1,16 +1,16 @@
 <?php
 
 /**
- * Copyright © OXID eSales AG. All rights reserved.
+ * Copyright © Ginger. All rights reserved.
  * See LICENSE file for license details.
  */
 
 declare(strict_types=1);
 
-namespace OxidEsales\ModuleTemplate\Tests\Service;
+namespace GingerPayments\Payments\Tests\Service;
 
-use OxidEsales\ModuleTemplate\Service\BasketItemLogger;
-use OxidEsales\ModuleTemplate\Service\ModuleSettings;
+use GingerPayments\Payments\Service\BasketItemLogger;
+use GingerPayments\Payments\Service\ModuleSettings;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface as PsrLoggerInterface;
 

@@ -1,19 +1,19 @@
 <?php
 
 /**
- * Copyright © OXID eSales AG. All rights reserved.
+ * Copyright © Ginger. All rights reserved.
  * See LICENSE file for license details.
  */
 
 declare(strict_types=1);
 
-namespace OxidEsales\ModuleTemplate\Tests\Integration\Service;
+namespace GingerPayments\Payments\Tests\Integration\Service;
 
 use OxidEsales\Eshop\Application\Model\User as EshopModelUser;
-use OxidEsales\ModuleTemplate\Model\GreetingTracker;
-use OxidEsales\ModuleTemplate\Service\Repository;
-use OxidEsales\ModuleTemplate\Tests\Integration\IntegrationTestCase;
-use OxidEsales\ModuleTemplate\Traits\ServiceContainer;
+use GingerPayments\Payments\Model\GreetingTracker;
+use GingerPayments\Payments\Service\Repository;
+use GingerPayments\Payments\Tests\Integration\IntegrationTestCase;
+use GingerPayments\Payments\Traits\ServiceContainer;
 
 final class RepositoryTest extends IntegrationTestCase
 {

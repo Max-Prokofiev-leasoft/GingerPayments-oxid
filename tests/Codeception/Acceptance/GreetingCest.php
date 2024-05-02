@@ -1,20 +1,20 @@
 <?php
 
 /**
- * Copyright © OXID eSales AG. All rights reserved.
+ * Copyright © Ginger. All rights reserved.
  * See LICENSE file for license details.
  */
 
 declare(strict_types=1);
 
-namespace OxidEsales\ModuleTemplate\Tests\Codeception\Helper;
+namespace GingerPayments\Payments\Tests\Codeception\Helper;
 
 use OxidEsales\Codeception\Module\Translation\Translator;
-use OxidEsales\ModuleTemplate\Tests\Codeception\AcceptanceTester;
+use GingerPayments\Payments\Tests\Codeception\AcceptanceTester;
 
 /**
- * @group oe_moduletemplate
- * @group oe_moduletemplate_startpage
+ * @group modules_GingerPayments-oxid
+ * @group modules_GingerPayments-oxid_startpage
  */
 final class GreetingCest
 {

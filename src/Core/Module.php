@@ -1,17 +1,17 @@
 <?php
 
 /**
- * Copyright © OXID eSales AG. All rights reserved.
+ * Copyright © Ginger. All rights reserved.
  * See LICENSE file for license details.
  */
 
 declare(strict_types=1);
 
-namespace OxidEsales\ModuleTemplate\Core;
+namespace GingerPayments\Payments\Core;
 
 final class Module
 {
-    public const MODULE_ID = 'oe_moduletemplate';
+    public const MODULE_ID = 'modules_GingerPayments-oxid';
 
     public const OEMT_GREETING_TEMPLATE_VARNAME = 'oemt_greeting';
 

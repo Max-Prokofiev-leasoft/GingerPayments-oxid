@@ -1,16 +1,16 @@
 <?php
 
 /**
- * Copyright © OXID eSales AG. All rights reserved.
+ * Copyright © Ginger. All rights reserved.
  * See LICENSE file for license details.
  */
 
 declare(strict_types=1);
 
-namespace OxidEsales\ModuleTemplate\Tests\Integration\Model;
+namespace GingerPayments\Payments\Tests\Integration\Model;
 
 use OxidEsales\Eshop\Application\Model\User as EshopModelUser;
-use OxidEsales\ModuleTemplate\Tests\Integration\IntegrationTestCase;
+use GingerPayments\Payments\Tests\Integration\IntegrationTestCase;
 
 final class UserModelTest extends IntegrationTestCase
 {

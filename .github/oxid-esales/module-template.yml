@@ -1,4 +1,4 @@
-# {{ $ids := "oe_moduletemplate" }}ids: {{ print $ids }}
+# {{ $ids := "modules_GingerPayments-oxid" }}ids: {{ print $ids }}
 # {{ $org := "oxid-esales" }}organisation: {{ print $org }}
 # {{ $name := "module-template" }}name: {{ print $name }}
 prepare_shop:

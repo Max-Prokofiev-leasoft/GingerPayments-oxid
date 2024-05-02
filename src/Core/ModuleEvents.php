@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Copyright © OXID eSales AG. All rights reserved.
+ * Copyright © Ginger. All rights reserved.
  * See LICENSE file for license details.
  */
 
 declare(strict_types=1);
 
-namespace OxidEsales\ModuleTemplate\Core;
+namespace GingerPayments\Payments\Core;
 
 use Exception;
 use OxidEsales\DoctrineMigrationWrapper\MigrationsBuilder;
@@ -50,10 +50,10 @@ final class ModuleEvents
 
         $output = new BufferedOutput();
         $migrations->setOutput($output);
-        $neeedsUpdate = $migrations->execute('migrations:up-to-date', 'oe_moduletemplate');
+        $neeedsUpdate = $migrations->execute('migrations:up-to-date', 'modules_GingerPayments-oxid');
 
         if ($neeedsUpdate) {
-            $migrations->execute('migrations:migrate', 'oe_moduletemplate');
+            $migrations->execute('migrations:migrate', 'modules_GingerPayments-oxid');
         }
     }
 }

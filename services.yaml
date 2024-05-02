@@ -1,5 +1,5 @@
 parameters:
-  app.log_file_path: '/var/www/source/log/oe_moduletemplate.log'
+  app.log_file_path: '/var/www/source/log/modules_GingerPayments-oxid.log'
 
 imports:
   - { resource: src/Command/services.yaml }
@@ -12,36 +12,36 @@ services:
     bind:
       OxidEsales\Eshop\Core\Request: '@=service("OxidEsales\\ModuleTemplate\\Core\\Registry").getRequest()'
 
-  OxidEsales\ModuleTemplate\Core\Registry:
+  GingerPayments\Payments\Core\Registry:
     class: OxidEsales\Eshop\Core\Registry
     public: true
 
-  OxidEsales\ModuleTemplate\Service\BasketItemLogger:
-    class: OxidEsales\ModuleTemplate\Service\BasketItemLogger
+  GingerPayments\Payments\Service\BasketItemLogger:
+    class: GingerPayments\Payments\Service\BasketItemLogger
     public: true
     arguments:
-      $logger: '@OxidEsales\ModuleTemplate\Logger'
+      $logger: '@GingerPayments\Payments\Logger'
 
-  OxidEsales\ModuleTemplate\Logger:
+  GingerPayments\Payments\Logger:
     class: Monolog\Logger
-    factory: [ '@OxidEsales\ModuleTemplate\Logger\Factory', 'create' ]
+    factory: [ '@GingerPayments\Payments\Logger\Factory', 'create' ]
 
-  OxidEsales\ModuleTemplate\Logger\Factory:
+  GingerPayments\Payments\Logger\Factory:
     class: OxidEsales\EshopCommunity\Internal\Framework\Logger\Factory\MonologLoggerFactory
     arguments:
-      $configuration: '@OxidEsales\ModuleTemplate\Logger\Configuration'
+      $configuration: '@GingerPayments\Payments\Logger\Configuration'
 
-  OxidEsales\ModuleTemplate\Logger\Configuration:
+  GingerPayments\Payments\Logger\Configuration:
     class: OxidEsales\EshopCommunity\Internal\Framework\Logger\Configuration\MonologConfiguration
     arguments:
       $loggerName: 'Basket Logger'
       $logFilePath: '%app.log_file_path%'
       $logLevel: !php/const Psr\Log\LogLevel::DEBUG
 
-  OxidEsales\ModuleTemplate\Service\:
+  GingerPayments\Payments\Service\:
     resource: 'src/Service/*'
     public: true
 
-  OxidEsales\ModuleTemplate\Subscriber\BeforeModelUpdate:
-    class: OxidEsales\ModuleTemplate\Subscriber\BeforeModelUpdate
+  GingerPayments\Payments\Subscriber\BeforeModelUpdate:
+    class: GingerPayments\Payments\Subscriber\BeforeModelUpdate
     tags: [ 'kernel.event_subscriber' ]

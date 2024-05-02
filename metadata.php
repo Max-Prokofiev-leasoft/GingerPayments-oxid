@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright © OXID eSales AG. All rights reserved.
+ * Copyright © Ginger. All rights reserved.
  * See LICENSE file for license details.
  */
 
@@ -14,28 +14,28 @@ $sMetadataVersion = '2.1';
  * Module information
  */
 $aModule = [
-    'id'          => 'oe_moduletemplate',
-    'title'       => 'OxidEsales Module Template (OEMT)',
-    'description' =>  '',
+    'id'          => 'gingerpayments',
+    'title'       => 'Ginger Payment',
+    'description' =>  'Ginger Payments solution',
     'thumbnail'   => 'pictures/logo.png',
     'version'     => '2.0.0',
-    'author'      => 'OXID eSales AG',
+    'author'      => 'Ginger',
     'url'         => '',
     'email'       => '',
     'extend'      => [
-        \OxidEsales\Eshop\Application\Model\User::class => \OxidEsales\ModuleTemplate\Model\User::class,
-        \OxidEsales\Eshop\Application\Controller\StartController::class => \OxidEsales\ModuleTemplate\Controller\StartController::class,
-        \OxidEsales\Eshop\Application\Model\Basket::class => \OxidEsales\ModuleTemplate\Model\Basket::class
+        \OxidEsales\Eshop\Application\Model\User::class => \GingerPayments\Payments\Model\User::class,
+        \OxidEsales\Eshop\Application\Controller\StartController::class => \GingerPayments\Payments\Controller\StartController::class,
+        \OxidEsales\Eshop\Application\Model\Basket::class => \GingerPayments\Payments\Model\Basket::class
     ],
     'controllers' => [
-        'oemtgreeting' => \OxidEsales\ModuleTemplate\Controller\GreetingController::class
+        'oemtgreeting' => \GingerPayments\Payments\Controller\GreetingController::class
     ],
     'templates'   => [
-        '@oe_moduletemplate/templates/greetingtemplate.tpl' => 'views/smarty/templates/greetingtemplate.tpl',
+        '@modules_GingerPayments-oxid/templates/greetingtemplate.tpl' => 'views/smarty/templates/greetingtemplate.tpl',
     ],
     'events' => [
-        'onActivate' => '\OxidEsales\ModuleTemplate\Core\ModuleEvents::onActivate',
-        'onDeactivate' => '\OxidEsales\ModuleTemplate\Core\ModuleEvents::onDeactivate'
+        'onActivate' => '\GingerPayments\Payments\Core\ModuleEvents::onActivate',
+        'onDeactivate' => '\GingerPayments\Payments\Core\ModuleEvents::onDeactivate'
     ],
     'blocks'      => [
         [

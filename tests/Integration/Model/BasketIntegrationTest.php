@@ -1,18 +1,18 @@
 <?php
 
 /**
- * Copyright © OXID eSales AG. All rights reserved.
+ * Copyright © Ginger. All rights reserved.
  * See LICENSE file for license details.
  */
 
 declare(strict_types=1);
 
-namespace OxidEsales\ModuleTemplate\Tests\Integration\Model;
+namespace GingerPayments\Payments\Tests\Integration\Model;
 
-use OxidEsales\ModuleTemplate\Model\Basket;
+use GingerPayments\Payments\Model\Basket;
 use OxidEsales\Eshop\Application\Model\Article as EshopModelArticle;
-use OxidEsales\ModuleTemplate\Service\BasketItemLogger;
-use OxidEsales\ModuleTemplate\Tests\Integration\IntegrationTestCase;
+use GingerPayments\Payments\Service\BasketItemLogger;
+use GingerPayments\Payments\Tests\Integration\IntegrationTestCase;
 
 final class BasketIntegrationTest extends IntegrationTestCase
 {

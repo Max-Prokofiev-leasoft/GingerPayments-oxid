@@ -1,6 +1,6 @@
 {
-    "name": "oxid-esales/module-template",
-    "description": "Module with solution examples",
+    "name": "ginger-payments/oxid-ginger",
+    "description": "Ginger Payments Payment Module for Oxid",
     "type": "oxideshop-module",
     "keywords": [
         "oxid",
@@ -8,13 +8,15 @@
         "eShop"
     ],
     "license": [
-        "GPL-3.0"
+        "OSL-3.0",
+        "AFL-3.0"
     ],
     "prefer-stable": true,
     "prefer-dist": true,
     "require": {
         "php": "^8.1",
-        "symfony/filesystem": "^6.0"
+        "symfony/filesystem": "^6.0",
+        "gingerpayments/ginger-php": "^2.2"
     },
     "minimum-stability": "dev",
     "require-dev": {
@@ -30,8 +32,8 @@
     },
     "autoload": {
         "psr-4": {
-            "OxidEsales\\ModuleTemplate\\": "src/",
-            "OxidEsales\\ModuleTemplate\\Tests\\": "tests/"
+            "GingerPayments\\Payments\\": "src/",
+            "GingerPayments\\Payments\\Tests\\": "tests/"
         }
     },
     "scripts": {
@@ -55,7 +57,7 @@
         "tests-integration": "XDEBUG_MODE=coverage vendor/bin/phpunit --bootstrap=/var/www/source/bootstrap.php --config=tests/ --testsuite=Integration",
         "tests-coverage": "XDEBUG_MODE=coverage vendor/bin/phpunit --coverage-text --bootstrap=/var/www/source/bootstrap.php --config=tests/ --coverage-html=tests/reports/coverage",
 
-        "tests-codeception": "(cd /var/www/ && THEME_ID=apex MODULE_IDS=oe_moduletemplate /var/www/vendor/bin/codecept run acceptance -c /var/www/vendor/oxid-esales/module-template/tests/codeception.yml -g oe_moduletemplate)",
+        "tests-codeception": "(cd /var/www/ && THEME_ID=apex MODULE_IDS=modules_GingerPayments-oxid /var/www/vendor/bin/codecept run acceptance -c /var/www/vendor/oxid-esales/module-template/tests/codeception.yml -g modules_GingerPayments-oxid)",
 
         "tests-all": [
             "@tests-unit",

@@ -1,18 +1,18 @@
 <?php
 
 /**
- * Copyright © OXID eSales AG. All rights reserved.
+ * Copyright © Ginger. All rights reserved.
  * See LICENSE file for license details.
  */
 
 declare(strict_types=1);
 
-namespace OxidEsales\ModuleTemplate\Tests\Unit\Service;
+namespace GingerPayments\Payments\Tests\Unit\Service;
 
 use OxidEsales\Eshop\Core\Request as CoreRequest;
-use OxidEsales\ModuleTemplate\Core\Module as ModuleCore;
-use OxidEsales\ModuleTemplate\Service\GreetingMessage;
-use OxidEsales\ModuleTemplate\Service\ModuleSettings;
+use GingerPayments\Payments\Core\Module as ModuleCore;
+use GingerPayments\Payments\Service\GreetingMessage;
+use GingerPayments\Payments\Service\ModuleSettings;
 use PHPUnit\Framework\TestCase;
 
 final class GreetingMessageTest extends TestCase
