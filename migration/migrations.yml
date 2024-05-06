@@ -1,4 +1,0 @@
-table_storage:
-  table_name: oxmigrations_modules_GingerPayments-oxid
-migrations_paths:
-  'GingerPayments\Payments\Migrations': data
