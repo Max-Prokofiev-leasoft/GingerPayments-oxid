@@ -20,40 +20,25 @@ use Symfony\Component\Console\Output\BufferedOutput;
  */
 final class ModuleEvents
 {
-    /**
-     * Execute action on activate event
-     *
-     * @throws Exception
-     */
+//**
+//* Execute action on activate event.
+//*
+//* @return void
+//*/
     public static function onActivate(): void
     {
-        // execute module migrations
-        self::executeModuleMigrations();
+        self::addGingerpaymentsPaymentMethods();
     }
-
-    /**
-     * Execute action on deactivate event
-     *
-     * @throws Exception
-     */
     public static function onDeactivate(): void
     {
-        //nothing to be done here for this module right now
+
     }
 
     /**
-     * Execute necessary module migrations on activate event
+     * Adds ginger payment methods
+     *
      */
-    private static function executeModuleMigrations(): void
+    public static function addGingerpaymentsPaymentMethods(): void
     {
-        $migrations = (new MigrationsBuilder())->build();
-
-        $output = new BufferedOutput();
-        $migrations->setOutput($output);
-        $neeedsUpdate = $migrations->execute('migrations:up-to-date', 'modules_GingerPayments-oxid');
-
-        if ($neeedsUpdate) {
-            $migrations->execute('migrations:migrate', 'modules_GingerPayments-oxid');
-        }
     }
 }

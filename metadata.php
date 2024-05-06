@@ -14,83 +14,52 @@ $sMetadataVersion = '2.1';
  * Module information
  */
 $aModule = [
-    'id'          => 'gingerpayments',
-    'title'       => 'Ginger Payment',
-    'description' =>  'Ginger Payments solution',
-    'thumbnail'   => 'pictures/logo.png',
-    'version'     => '2.0.0',
-    'author'      => 'Ginger',
-    'url'         => '',
-    'email'       => '',
-    'extend'      => [
-        \OxidEsales\Eshop\Application\Model\User::class => \GingerPayments\Payments\Model\User::class,
-        \OxidEsales\Eshop\Application\Controller\StartController::class => \GingerPayments\Payments\Controller\StartController::class,
-        \OxidEsales\Eshop\Application\Model\Basket::class => \GingerPayments\Payments\Model\Basket::class
+    'id' => 'gingerpayments',
+    'title' => [
+        'de' => 'Ginger Payment',
+        'en' => 'Ginger Payment',
+        'fr' => 'Ginger Payment'
     ],
+    'description'   => [
+        'de' => 'Ginger Payments solution DE',
+        'en' =>'Ginger Payments solution EN',
+        'fr' => 'Ginger Payments solution FR',
+        'nl' => 'Ginger Payments solution NL',
+    ],
+    'thumbnail' => 'pictures/logo.png',
+    'version' => '1.0.0',
+    'author' => 'Ginger Payments',
+    'url' => 'https://merchant.dev.gingerpayments.com/',
+    'email' => 'max.prokofiev@leasoft.org',
+    'extend' => [
+        \OxidEsales\Eshop\Application\Model\Order::class => \GingerPayments\Payments\Order\ModuleOrder::class,
+        \OxidEsales\Eshop\Application\Controller\PaymentController::class => \GingerPayments\Payments\Controller\ModulePaymentController::class,
+        \OxidEsales\Eshop\Application\Model\PaymentGateway::class => \GingerPayments\Payments\Model\PaymentGateway::class,
+    ],
+    'templates' => [
+        'ginger_payments_module_settings.tpl' => 'ginger_payments_module/views/admin/ginger_payments_module_settings.tpl',
+    ],
+    'blocks' => array(
+        array(
+            'template' => 'page/checkout/payment.tpl',
+            'block' => 'select_payment',
+            'file' => '/views/blocks/page/checkout/gingerpayments.tpl'
+        ),
+    ),
     'controllers' => [
-        'oemtgreeting' => \GingerPayments\Payments\Controller\GreetingController::class
-    ],
-    'templates'   => [
-        '@modules_GingerPayments-oxid/templates/greetingtemplate.tpl' => 'views/smarty/templates/greetingtemplate.tpl',
+        'ModuleSettings' => \GingerPayments\Payments\Controller\ModuleSettingsController::class,
     ],
     'events' => [
         'onActivate' => '\GingerPayments\Payments\Core\ModuleEvents::onActivate',
         'onDeactivate' => '\GingerPayments\Payments\Core\ModuleEvents::onDeactivate'
     ],
-    'blocks'      => [
-        [
-            //It is possible to replace blocks by theme, to do so add 'theme' => '<theme_name>' key/value in here
-            'template' => 'page/shop/start.tpl',
-            'block' => 'start_welcome_text',
-            'file' => 'views/smarty/blocks/oemt_start_welcome_text.tpl'
-        ]
-    ],
     'settings' => [
         /** Main */
         [
-            'group'       => 'oemoduletemplate_main',
-            'name'        => 'oemoduletemplate_GreetingMode',
-            'type'        => 'select',
-            'constraints' => 'generic|personal',
-            'value'       => 'generic'
+            'group' => 'gingerpayments_main',
+            'name' => 'gingerpayments_apikey',
+            'type' => 'str',
+            'value' => ''
         ],
-        [
-            'group' => 'oemoduletemplate_main',
-            'name'  => 'oemoduletemplate_BrandName',
-            'type'  => 'str',
-            'value' => 'Testshop'
-        ],
-        [
-            'group' => 'oemoduletemplate_main',
-            'name'  => 'oemoduletemplate_LoggerEnabled',
-            'type'  => 'bool',
-            'value' => false
-        ],
-        [
-            'group' => 'oemoduletemplate_main',
-            'name'  => 'oemoduletemplate_Timeout',
-            'type'  => 'num',
-            'value' => 30
-            //'value' => 30.5
-        ],
-        [
-            'group' => 'oemoduletemplate_main',
-            'name'  => 'oemoduletemplate_Categories',
-            'type'  => 'arr',
-            'value' => ['Sales', 'Manufacturers']
-        ],
-        [
-            'group' => 'oemoduletemplate_main',
-            'name'  => 'oemoduletemplate_Channels',
-            'type'  => 'aarr',
-            'value' => ['1' => 'de', '2' => 'en']
-        ],
-        [
-            'group'    => 'oemoduletemplate_main',
-            'name'     => 'oemoduletemplate_Password',
-            'type'     => 'password',
-            'value'    => 'changeMe',
-            'position' => 3
-        ]
     ],
 ];
