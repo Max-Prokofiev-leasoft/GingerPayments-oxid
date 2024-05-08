@@ -32,18 +32,7 @@ final class ModuleEvents
     }
     public static function onDeactivate(): void
     {
-        $aPayments = [
-            'gingerpaymentscreditcard' => 'Kreditkarte',
-            'gingerpaymentssepa' => 'Lastschrift SEPA'
-        ];
-        $oPayment = oxNew(\OxidEsales\Eshop\Application\Model\Payment::class);
-        foreach ($aPayments as $sPaymentOxid => $sPaymentDesc) {
-            $oPayment->load($sPaymentOxid);
-            if ($oPayment->exists()) {
-                $oPayment->delete();
-            }
-        }
-        unset($oPayment);
+       self::removeGingerpaymentsPaymentMethods();
     }
 
     /**
