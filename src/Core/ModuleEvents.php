@@ -84,4 +84,21 @@ final class ModuleEvents
         }
         unset($oPayment);
     }
+    public static function removeGingerpaymentsPaymentMethods(): void
+    {
+        {
+            $aPayments = [
+                'gingerpaymentscreditcard',
+                'gingerpaymentssepa'
+            ];
+            $oPayment = oxNew(\OxidEsales\Eshop\Application\Model\Payment::class);
+            foreach ($aPayments as $sPaymentOxid => $sPaymentDesc) {
+                $oPayment->load($sPaymentOxid);
+                if ($oPayment->exists()) {
+                    $oPayment->delete();
+                }
+            }
+            unset($oPayment);
+        }
+    }
 }
