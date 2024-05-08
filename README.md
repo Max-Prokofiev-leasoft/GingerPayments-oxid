@@ -1,1 +1,1 @@
-# OXID eShop Module Template
+# Ginger Payments extension
