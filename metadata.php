@@ -32,8 +32,6 @@ $aModule = [
     'url' => 'https://merchant.dev.gingerpayments.com/',
     'email' => 'max.prokofiev@leasoft.org',
     'extend' => [
-//        \OxidEsales\Eshop\Application\Model\Order::class => \GingerPayments\Payments\Order\ModuleOrder::class,
-//        \OxidEsales\Eshop\Application\Controller\PaymentController::class => \GingerPayments\Payments\Controller\ModulePaymentController::class,
         \OxidEsales\Eshop\Application\Model\PaymentGateway::class => \GingerPayments\Payments\Model\PaymentGateway::class,
     ],
 //    'templates' => [

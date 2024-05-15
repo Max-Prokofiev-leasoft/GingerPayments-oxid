@@ -1,8 +1,11 @@
 <?php
 
+
 namespace GingerPayments\Payments\Controller;
 
-class ModulePaymentController
+use OxidEsales\Eshop\Application\Controller\FrontendController;
+
+class ModulePaymentController extends FrontendController
 {
 
 }
