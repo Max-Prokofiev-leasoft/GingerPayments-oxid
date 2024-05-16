@@ -9,10 +9,12 @@ use GingerPluginSdk\Exceptions\APIException;
 
 class PaymentGateway
 {
-    public function __construct(){
+    public function __construct()
+    {
         require_once PaymentHelper::AUTOLOAD_FILE;
         $this->paymentHelper = new PaymentHelper();
     }
+
     private PaymentHelper $paymentHelper;
     private object $paymentInfo;
 
@@ -32,12 +34,22 @@ class PaymentGateway
      */
     public function executePayment($amount, &$order)
     {
-        if (@$this->paymentInfo->oxuserpayments__oxpaymentsid->value === 'gingerpaymentscreditcard') {
+        $paymentMethods = [
+            'gingerpaymentsideal' => 'ideal',
+            'gingerpaymentscreditcard' => 'credit-card'
+        ];
 
-            $payment_redirect = $this->paymentHelper->processPayment(totalAmount: $amount,order: $order,paymentMethod: 'credit-card');
+        $paymentId = @$this->paymentInfo->oxuserpayments__oxpaymentsid->value;
+
+        if (isset($paymentMethods[$paymentId])) {
+            $paymentMethod = $paymentMethods[$paymentId];
+            $payment_redirect = $this->paymentHelper->processPayment(
+                totalAmount: $amount,
+                order: $order,
+                paymentMethod: $paymentMethod
+            );
             header("Location: $payment_redirect");
             exit();
-
         }
         return false;
     }

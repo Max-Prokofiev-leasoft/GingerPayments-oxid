@@ -14,7 +14,7 @@ class CustomerBuilder
         // Build customer entity from order data
         $user = $order->getUser();
         $address = new Address(
-            'customer',
+            'billing',
             $user->oxuser__oxzip->value,
             new \GingerPluginSdk\Properties\Country(self::getCountryIso(user: $user))
         );

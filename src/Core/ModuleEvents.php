@@ -49,12 +49,12 @@ final class ModuleEvents
                 'OXLONGDESC_DE' => 'Der Betrag wird von Ihrer Kreditkarte abgebucht, sobald die Bestellung abgeschickt wird',
                 'OXLONGDESC_EN' => 'The amount will be debited from your credit card once the order is submitted'
             ],
-            'gingerpaymentssepa' => ['OXID' => 'gingerpaymentssepa',
-                'OXDESC_DE' => 'Lastschrift SEPA',
-                'OXDESC_EN' => 'Direct Debit SEPA',
-                'OXLONGDESC_DE' => 'Ihr Konto wird nach Abschicken der Bestellung belastet',
-                'OXLONGDESC_EN' => 'Your account will be debited upon the order submission'
-            ]
+            'gingerpaymentsideal' => ['OXID' => 'gingerpaymentsideal',
+                'OXDESC_DE' => 'IDeal',
+                'OXDESC_EN' => 'IDeal',
+                'OXLONGDESC_DE' => 'IDeal-Zahlungsmethode',
+                'OXLONGDESC_EN' => 'IDeal payment method'
+            ],
         ];
         $oLangArray = \OxidEsales\Eshop\Core\Registry::getLang()->getLanguageArray();
         $oPayment = oxNew(\OxidEsales\Eshop\Application\Model\Payment::class);
@@ -79,7 +79,8 @@ final class ModuleEvents
     {
         $aPayments = [
             'gingerpaymentscreditcard',
-            'gingerpaymentssepa'
+            'gingerpaymentssepa',
+            'gingerpaymentsideal'
         ];
         $oPayment = oxNew(\OxidEsales\Eshop\Application\Model\Payment::class);
         foreach ($aPayments as $sPaymentOxid) {
