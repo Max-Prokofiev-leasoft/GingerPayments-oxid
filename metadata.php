@@ -32,7 +32,7 @@ $aModule = [
     'url' => 'https://merchant.dev.gingerpayments.com/',
     'email' => 'max.prokofiev@leasoft.org',
     'extend' => [
-        \OxidEsales\Eshop\Application\Model\PaymentGateway::class => \GingerPayments\Payments\Model\PaymentGateway::class,
+        oxpaymentgateway::class => \GingerPayments\Payments\Model\PaymentGateway::class,
     ],
 //    'templates' => [
 //        'ginger_payments_module_settings.tpl' => 'ginger_payments_module/views/admin/ginger_payments_module_settings.tpl',

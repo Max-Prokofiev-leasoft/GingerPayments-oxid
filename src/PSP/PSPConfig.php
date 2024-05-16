@@ -10,6 +10,7 @@ class PSPConfig
 
     public const ENDPOINT = 'https://api.dev.gingerpayments.com';
 
+    //temporary hardcoded
     public const API_KEY = 'e9a320bc591c41668c89e5ba59591c53';
 
 }

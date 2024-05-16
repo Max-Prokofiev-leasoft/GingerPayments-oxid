@@ -6,12 +6,12 @@ require_once __DIR__ . '/../../vendor/autoload.php';
 
 use GingerPayments\Payments\Helpers\PaymentHelper;
 use GingerPluginSdk\Exceptions\APIException;
-use OxidEsales\EshopCommunity\Application\Model\PaymentGateway as BasePaymentGateway;
 
 
-class PaymentGateway extends BasePaymentGateway
+class PaymentGateway
 {
     private PaymentHelper $paymentHelper;
+    private object $_oPaymentInfo;
 
     /**
      * Sets payment parameters.
@@ -32,13 +32,6 @@ class PaymentGateway extends BasePaymentGateway
     {
         $this->_iLastErrorNo = null;
         $this->_sLastError = null;
-
-//        if (!$this->isActive()) {
-//            return true; // fake yes
-//        }
-
-        // proceed with no payment
-        // used for other countries
 
         if (@$this->_oPaymentInfo->oxuserpayments__oxpaymentsid->value === 'gingerpaymentscreditcard') {
 
