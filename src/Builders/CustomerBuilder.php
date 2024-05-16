@@ -12,26 +12,26 @@ class CustomerBuilder
     public static function buildCustomer($order): Customer
     {
         // Build customer entity from order data
-        $oUser = $order->getUser();
+        $user = $order->getUser();
         $address = new Address(
             'customer',
-            $oUser->oxuser__oxzip->value,
-            new \GingerPluginSdk\Properties\Country(self::getCountryIso($oUser))
+            $user->oxuser__oxzip->value,
+            new \GingerPluginSdk\Properties\Country(self::getCountryIso(user: $user))
         );
 
         return new Customer(
             new AdditionalAddresses(addresses: $address),
-            $oUser->oxuser__oxfname->value,
-            $oUser->oxuser__oxlname->value,
-            new EmailAddress(value: $oUser->oxuser__oxusername->value)
+            $user->oxuser__oxfname->value,
+            $user->oxuser__oxlname->value,
+            new EmailAddress(value: $user->oxuser__oxusername->value)
         );
     }
 
-    protected static function getCountryIso($oUser)
+    protected static function getCountryIso($user)
     {
         // Get country ISO code from user data
         $country = oxNew(\OxidEsales\Eshop\Application\Model\Country::class);
-        $country->load($oUser->oxuser__oxcountryid->value);
+        $country->load($user->oxuser__oxcountryid->value);
         return $country->oxcountry__oxisoalpha2->value;
     }
 }
