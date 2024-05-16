@@ -12,10 +12,18 @@ class GingerApiHelper
 {
     protected Client $client;
 
-    public function __construct($endpoint = PSPConfig::ENDPOINT ,$apiKey = PSPConfig::API_KEY)
+    /**
+     * @throws APIException
+     */
+    public function __construct($endpoint = PSPConfig::ENDPOINT , $apiKey = PSPConfig::API_KEY)
     {
-        $clientOptions = new ClientOptions(endpoint: $endpoint, useBundle: true, apiKey: $apiKey);
-        $this->client = new Client(options: $clientOptions);
+        try { $clientOptions = new ClientOptions(endpoint: $endpoint, useBundle: true, apiKey: $apiKey);
+            $this->client = new Client(options: $clientOptions);
+        }catch (\Exception $e) {
+            throw new APIException("Failed to initialize Ginger API client: " . $e->getMessage(), $e->getCode(), $e);
+
+        }
+
     }
 
     /**
@@ -23,7 +31,11 @@ class GingerApiHelper
      */
     public function sendOrder(Order $order): Order
     {
-        // Send order to Ginger Payments API
-        return $this->client->sendOrder($order);
+        try {
+            // Send order to Ginger Payments API
+            return $this->client->sendOrder($order);
+        } catch (APIException $e) {
+            throw new APIException("Error sending order: " . $e->getMessage());
+        }
     }
 }
