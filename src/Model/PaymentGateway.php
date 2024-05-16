@@ -14,35 +14,31 @@ class PaymentGateway
         $this->paymentHelper = new PaymentHelper();
     }
     private PaymentHelper $paymentHelper;
-    private object $_oPaymentInfo;
+    private object $paymentInfo;
 
     /**
      * Sets payment parameters.
      *
-     * @param object $oUserpayment User payment object
+     * @param object $userPayment User payment object
      */
-    public function setPaymentParams($oUserpayment)
+    public function setPaymentParams($userPayment)
     {
         // store data
-        $this->_oPaymentInfo = &$oUserpayment;
+        $this->paymentInfo = &$userPayment;
     }
 
     /**
      * @throws APIException
      */
-    public function executePayment($dAmount, &$oOrder)
+    public function executePayment($amount, &$order)
     {
-        $this->_iLastErrorNo = null;
-        $this->_sLastError = null;
+        if (@$this->paymentInfo->oxuserpayments__oxpaymentsid->value === 'gingerpaymentscreditcard') {
 
-        if (@$this->_oPaymentInfo->oxuserpayments__oxpaymentsid->value === 'gingerpaymentscreditcard') {
-
-            $payment_redirect = $this->paymentHelper->processPayment(dAmount: $dAmount,oOrder: $oOrder,paymentMethod: 'credit-card');
+            $payment_redirect = $this->paymentHelper->processPayment(totalAmount: $amount,order: $order,paymentMethod: 'credit-card');
             header("Location: $payment_redirect");
             exit();
 
         }
-
         return false;
     }
 

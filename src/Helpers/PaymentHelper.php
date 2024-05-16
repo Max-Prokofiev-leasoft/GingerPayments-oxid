@@ -19,9 +19,9 @@ class PaymentHelper
     /**
      * @throws APIException
      */
-    public function processPayment($dAmount, $oOrder,$paymentMethod): string
+    public function processPayment($totalAmount, $order,$paymentMethod): string
     {
-        $order = OrderBuilder::buildOrder(totalAmount: $dAmount,order: $oOrder,paymentMethod: $paymentMethod) ;
+        $order = OrderBuilder::buildOrder(totalAmount: $totalAmount,order: $order,paymentMethod: $paymentMethod) ;
         return $this->gingerApiHelper->sendOrder($order)->getPaymentUrl();
     }
 }
