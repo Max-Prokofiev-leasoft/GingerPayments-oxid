@@ -2,7 +2,6 @@
 
 namespace GingerPayments\Payments\Model;
 
-require_once __DIR__ . '/../../vendor/autoload.php';
 
 use GingerPayments\Payments\Helpers\PaymentHelper;
 use GingerPluginSdk\Exceptions\APIException;
@@ -10,6 +9,10 @@ use GingerPluginSdk\Exceptions\APIException;
 
 class PaymentGateway
 {
+    public function __construct(){
+        require_once PaymentHelper::AUTOLOAD_FILE;
+        $this->paymentHelper = new PaymentHelper();
+    }
     private PaymentHelper $paymentHelper;
     private object $_oPaymentInfo;
 
@@ -21,7 +24,6 @@ class PaymentGateway
     public function setPaymentParams($oUserpayment)
     {
         // store data
-        $this->paymentHelper = new PaymentHelper();
         $this->_oPaymentInfo = &$oUserpayment;
     }
 

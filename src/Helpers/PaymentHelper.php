@@ -7,6 +7,7 @@ use GingerPluginSdk\Exceptions\APIException;
 
 class PaymentHelper
 {
+    public const AUTOLOAD_FILE = __DIR__ . '/../../vendor/autoload.php';
     protected GingerApiHelper $gingerApiHelper;
 
     public function __construct()
