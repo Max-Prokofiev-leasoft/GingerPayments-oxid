@@ -18,17 +18,24 @@ class PaymentHelper
      */
     public function __construct()
     {
-        $this->gingerApiHelper = new GingerApiHelper(endpoint: $this->getEndpoint(),apiKey:  $this->getApiKey());
+        $this->gingerApiHelper = new GingerApiHelper(endpoint: $this->getEndpoint(), apiKey: $this->getApiKey());
     }
 
     /**
      * @throws APIException
      */
-    public function processPayment($totalAmount, $order,$paymentMethod): string
+    public function processPayment($totalAmount, $order, $paymentMethod): string
     {
-        $order = OrderBuilder::buildOrder(totalAmount: $totalAmount,order: $order,paymentMethod: $paymentMethod) ;
-        return $this->gingerApiHelper->sendOrder($order)->getPaymentUrl();
+        $returnUrl = $this->getReturnUrl();
+        $order = OrderBuilder::buildOrder(
+            totalAmount: $totalAmount,
+            order: $order,
+            paymentMethod: $paymentMethod,
+            returnUrl: $returnUrl
+        );
+        return $this->gingerApiHelper->sendOrder(order: $order)->getPaymentUrl();
     }
+
     public function getApiKey(): string
     {
         $moduleSettingService = ContainerFacade::get(ModuleSettingServiceInterface::class);
@@ -39,6 +46,7 @@ class PaymentHelper
         }
         return $apiKey;
     }
+
     public function getEndpoint(): string
     {
         return PSPConfig::ENDPOINT;
@@ -59,5 +67,11 @@ class PaymentHelper
         }
 
         return true;
+    }
+
+    public function getReturnUrl(): string
+    {
+        $config = \oxregistry::getConfig();
+        return $config->getShopUrl() . 'index.php?cl=thankyou';
     }
 }

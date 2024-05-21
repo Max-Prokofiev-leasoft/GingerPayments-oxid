@@ -16,9 +16,9 @@ $sMetadataVersion = '2.1';
 $aModule = [
     'id' => 'gingerpayments',
     'title' => [
-        'de' => 'Ginger Payment',
-        'en' => 'Ginger Payment',
-        'fr' => 'Ginger Payment'
+        'de' => 'Ginger Payments',
+        'en' => 'Ginger Payments',
+        'fr' => 'Ginger Payments'
     ],
     'description' => [
         'de' => 'Ginger Payments solution DE',
@@ -33,6 +33,7 @@ $aModule = [
     'email' => 'max.prokofiev@leasoft.org',
     'extend' => [
         oxpaymentgateway::class => \GingerPayments\Payments\Model\PaymentGateway::class,
+        oxorder::class => \GingerPayments\Payments\Model\ModuleOrder::class,
     ],
     'blocks' => [
         [
@@ -51,7 +52,7 @@ $aModule = [
             'group' => 'gingerpayments_main',
             'name' => 'gingerpayment_apikey',
             'type' => 'str',
-            'value' => ''
+            'value' => 'Please insert your API key'
         ],
     ],
 ];

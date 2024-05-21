@@ -11,7 +11,7 @@ use GingerPluginSdk\Properties\Currency;
 
 class OrderBuilder
 {
-    public static function buildOrder($totalAmount, $order, $paymentMethod): Order
+    public static function buildOrder($totalAmount, $order, $paymentMethod,$returnUrl): Order
     {
         // Build order entity
         $currency = new Currency(value: $order->getOrderCurrency()->name);
@@ -30,7 +30,7 @@ class OrderBuilder
             amount: $amount,
             transactions: $transaction,
             customer: CustomerBuilder::buildCustomer($order),
-            return_url: "http://localhost/en/order-history/",
+            return_url: $returnUrl,
             id: $order->getId(),
             merchantOrderId: "EXAMPLE001",
             description: "Oxid order " . $order->getId() . " at " . $order->getShopId()

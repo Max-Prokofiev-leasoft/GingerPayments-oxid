@@ -79,7 +79,6 @@ final class ModuleEvents
     {
         $aPayments = [
             'gingerpaymentscreditcard',
-            'gingerpaymentssepa',
             'gingerpaymentsideal'
         ];
         $oPayment = oxNew(\OxidEsales\Eshop\Application\Model\Payment::class);
