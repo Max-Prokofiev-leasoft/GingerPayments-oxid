@@ -4,6 +4,7 @@ namespace GingerPayments\Payments\Model;
 
 
 use GingerPayments\Payments\Helpers\PaymentHelper;
+use GingerPayments\Payments\PSP\PSPConfig;
 use GingerPluginSdk\Exceptions\APIException;
 
 
@@ -11,7 +12,7 @@ class PaymentGateway
 {
     public function __construct()
     {
-        require_once PaymentHelper::AUTOLOAD_FILE;
+        require_once PSPConfig::AUTOLOAD_FILE;
         $this->paymentHelper = new PaymentHelper();
     }
 
@@ -23,7 +24,7 @@ class PaymentGateway
      *
      * @param object $userPayment User payment object
      */
-    public function setPaymentParams($userPayment)
+    public function setPaymentParams(object $userPayment): void
     {
         // store data
         $this->paymentInfo = &$userPayment;

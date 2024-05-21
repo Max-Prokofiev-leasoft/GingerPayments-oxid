@@ -3,17 +3,22 @@
 namespace GingerPayments\Payments\Helpers;
 
 use GingerPayments\Payments\Builders\OrderBuilder;
+use GingerPayments\Payments\PSP\PSPConfig;
 use GingerPluginSdk\Exceptions\APIException;
+use OxidEsales\EshopCommunity\Core\Di\ContainerFacade;
+use OxidEsales\EshopCommunity\Internal\Framework\Module\Facade\ModuleSettingServiceInterface;
 
 class PaymentHelper
 {
-    public const AUTOLOAD_FILE = __DIR__ . '/../../vendor/autoload.php';
+
     protected GingerApiHelper $gingerApiHelper;
 
+    /**
+     * @throws APIException
+     */
     public function __construct()
     {
-
-        $this->gingerApiHelper = new GingerApiHelper();
+        $this->gingerApiHelper = new GingerApiHelper(endpoint: $this->getEndpoint(),apiKey:  $this->getApiKey());
     }
 
     /**
@@ -23,5 +28,14 @@ class PaymentHelper
     {
         $order = OrderBuilder::buildOrder(totalAmount: $totalAmount,order: $order,paymentMethod: $paymentMethod) ;
         return $this->gingerApiHelper->sendOrder($order)->getPaymentUrl();
+    }
+    public function getApiKey(): string
+    {
+        $moduleSettingService = ContainerFacade::get(ModuleSettingServiceInterface::class);
+        return $moduleSettingService->getString('gingerpayment_apikey', 'gingerpayments')->toString();
+    }
+    public function getEndpoint(): string
+    {
+        return PSPConfig::ENDPOINT;
     }
 }

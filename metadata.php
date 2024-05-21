@@ -20,9 +20,9 @@ $aModule = [
         'en' => 'Ginger Payment',
         'fr' => 'Ginger Payment'
     ],
-    'description'   => [
+    'description' => [
         'de' => 'Ginger Payments solution DE',
-        'en' =>'Ginger Payments solution EN',
+        'en' => 'Ginger Payments solution EN',
         'fr' => 'Ginger Payments solution FR',
         'nl' => 'Ginger Payments solution NL',
     ],
@@ -34,18 +34,12 @@ $aModule = [
     'extend' => [
         oxpaymentgateway::class => \GingerPayments\Payments\Model\PaymentGateway::class,
     ],
-//    'templates' => [
-//        'ginger_payments_module_settings.tpl' => 'ginger_payments_module/views/admin/ginger_payments_module_settings.tpl',
-//    ],
-    'blocks' => array(
-        array(
+    'blocks' => [
+        [
             'template' => 'page/checkout/payment.tpl',
             'block' => 'select_payment',
             'file' => '/views/blocks/page/checkout/gingerpayments.tpl'
-        ),
-    ),
-    'controllers' => [
-        'ModuleSettings' => \GingerPayments\Payments\Controller\ModuleSettingsController::class,
+        ],
     ],
     'events' => [
         'onActivate' => '\GingerPayments\Payments\Core\ModuleEvents::onActivate',
@@ -54,8 +48,8 @@ $aModule = [
     'settings' => [
         /** Main */
         [
-            'group' => 'GINGERPAYMENTS_MAIN',
-            'name' => 'GINGERPAYMENTS_APIKEY',
+            'group' => 'gingerpayments_main',
+            'name' => 'gingerpayment_apikey',
             'type' => 'str',
             'value' => ''
         ],

@@ -15,7 +15,7 @@ class GingerApiHelper
     /**
      * @throws APIException
      */
-    public function __construct($endpoint = PSPConfig::ENDPOINT , $apiKey = PSPConfig::API_KEY)
+    public function __construct($endpoint,$apiKey)
     {
         try { $clientOptions = new ClientOptions(endpoint: $endpoint, useBundle: true, apiKey: $apiKey);
             $this->client = new Client(options: $clientOptions);
