@@ -32,10 +32,32 @@ class PaymentHelper
     public function getApiKey(): string
     {
         $moduleSettingService = ContainerFacade::get(ModuleSettingServiceInterface::class);
-        return $moduleSettingService->getString('gingerpayment_apikey', 'gingerpayments')->toString();
+        $apiKey = $moduleSettingService->getString('gingerpayment_apikey', 'gingerpayments')->toString();
+
+        if (!$this->isValidApiKeyFormat($apiKey)) {
+            throw new \InvalidArgumentException('Invalid API key format.');
+        }
+        return $apiKey;
     }
     public function getEndpoint(): string
     {
         return PSPConfig::ENDPOINT;
+    }
+
+    private function isValidApiKeyFormat(string $apiKey): bool
+    {
+        if (!ctype_alnum($apiKey)) {
+            return false;
+        }
+
+        if (preg_match('/[\'";--]|(\/\*)|(\*\/)|(\b(SELECT|INSERT|UPDATE|DELETE|DROP|UNION|JOIN|CREATE|ALTER|TRUNCATE|REPLACE)\b)/i', $apiKey)) {
+            return false;
+        }
+
+        if (preg_match('/<script|<\/script>|javascript:/i', $apiKey)) {
+            return false;
+        }
+
+        return true;
     }
 }
