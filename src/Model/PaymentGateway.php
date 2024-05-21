@@ -6,6 +6,7 @@ use GingerPayments\Payments\Helpers\PaymentHelper;
 use GingerPayments\Payments\PSP\PSPConfig;
 use GingerPluginSdk\Exceptions\APIException;
 use OxidEsales\EshopCommunity\Application\Model\Order;
+use OxidEsales\EshopCommunity\Core\Registry;
 
 class PaymentGateway
 {
@@ -37,16 +38,13 @@ class PaymentGateway
      * @param string $paymentMethod Selected payment method
      * @throws APIException
      */
-    private function handlePayment(float $amount, Order $order, string $paymentMethod): void
+    private function handlePayment(float $amount, Order $order, string $paymentMethod): string
     {
-        $payment_redirect = $this->paymentHelper->processPayment(
+        return $this->paymentHelper->processPayment(
             totalAmount: $amount,
             order: $order,
             paymentMethod: $paymentMethod
         );
-
-        $utils = \oxregistry::getUtils();
-        $utils->redirect($payment_redirect);
     }
 
     /**
@@ -59,7 +57,6 @@ class PaymentGateway
      */
     public function executePayment(float $amount, Order $order): bool
     {
-        $o = oxNew(Order::class);
 
         $paymentMethods = [
             'gingerpaymentsideal' => 'ideal',
@@ -71,8 +68,9 @@ class PaymentGateway
         if (isset($paymentMethods[$paymentId])) {
             $paymentMethod = $paymentMethods[$paymentId];
             $this->handlePayment($amount, $order, $paymentMethod);
-            return true;
         }
-        return false;
+        return true;
     }
+
+
 }

@@ -71,7 +71,6 @@ class PaymentHelper
 
     public function getReturnUrl(): string
     {
-        $config = \oxregistry::getConfig();
-        return $config->getShopUrl() . 'index.php?cl=thankyou';
+
     }
 }
