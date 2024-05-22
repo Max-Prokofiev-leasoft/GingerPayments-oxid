@@ -6,6 +6,7 @@ use GingerPayments\Payments\Builders\OrderBuilder;
 use GingerPayments\Payments\PSP\PSPConfig;
 use GingerPluginSdk\Exceptions\APIException;
 use OxidEsales\EshopCommunity\Core\Di\ContainerFacade;
+use OxidEsales\EshopCommunity\Core\Registry;
 use OxidEsales\EshopCommunity\Internal\Framework\Module\Facade\ModuleSettingServiceInterface;
 
 class PaymentHelper
@@ -69,8 +70,10 @@ class PaymentHelper
         return true;
     }
 
-    public function getReturnUrl(): string
+    private function getReturnUrl(): string
     {
-
+        $shopUrl = Registry::getConfig()->getShopUrl();
+        return $shopUrl . 'index.php?cl=thankyou&sid=' . Registry::getSession()->getId();
     }
+
 }

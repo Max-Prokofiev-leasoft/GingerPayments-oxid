@@ -11,7 +11,7 @@ use GingerPluginSdk\Properties\Currency;
 
 class OrderBuilder
 {
-    public static function buildOrder($totalAmount, $order, $paymentMethod,$returnUrl): Order
+    public static function buildOrder($totalAmount, $order, $paymentMethod, $returnUrl): Order
     {
         // Build order entity
         $currency = new Currency(value: $order->getOrderCurrency()->name);

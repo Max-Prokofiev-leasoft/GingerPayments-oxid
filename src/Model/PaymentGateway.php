@@ -1,5 +1,4 @@
 <?php
-
 namespace GingerPayments\Payments\Model;
 
 use GingerPayments\Payments\Helpers\PaymentHelper;
@@ -38,13 +37,17 @@ class PaymentGateway
      * @param string $paymentMethod Selected payment method
      * @throws APIException
      */
-    private function handlePayment(float $amount, Order $order, string $paymentMethod): string
+    private function handlePayment(float $amount, Order $order, string $paymentMethod): void
     {
-        return $this->paymentHelper->processPayment(
+
+        $paymentUrl = $this->paymentHelper->processPayment(
             totalAmount: $amount,
             order: $order,
-            paymentMethod: $paymentMethod
+            paymentMethod: $paymentMethod,
         );
+        Registry::getSession()->setVariable('payment_url', $paymentUrl);
+
+//        return $paymentUrl;
     }
 
     /**
@@ -57,7 +60,6 @@ class PaymentGateway
      */
     public function executePayment(float $amount, Order $order): bool
     {
-
         $paymentMethods = [
             'gingerpaymentsideal' => 'ideal',
             'gingerpaymentscreditcard' => 'credit-card'
@@ -71,6 +73,4 @@ class PaymentGateway
         }
         return true;
     }
-
-
 }
