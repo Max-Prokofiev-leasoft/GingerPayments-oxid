@@ -4,7 +4,7 @@ namespace GingerPayments\Payments\Model;
 use GingerPayments\Payments\Helpers\PaymentHelper;
 use GingerPayments\Payments\PSP\PSPConfig;
 use GingerPluginSdk\Exceptions\APIException;
-use OxidEsales\EshopCommunity\Application\Model\Order;
+use OxidEsales\EshopCommunity\Application\Model\Order as OxidOrder;
 use OxidEsales\EshopCommunity\Core\Registry;
 
 class PaymentGateway
@@ -33,11 +33,11 @@ class PaymentGateway
      * Handles payment execution based on the selected payment method.
      *
      * @param float $amount Payment amount
-     * @param Order $order Order object
+     * @param OxidOrder $order Order object
      * @param string $paymentMethod Selected payment method
      * @throws APIException
      */
-    private function handlePayment(float $amount, Order $order, string $paymentMethod): void
+    private function handlePayment(float $amount, OxidOrder $order, string $paymentMethod): void
     {
 
         $paymentUrl = $this->paymentHelper->processPayment(
@@ -54,11 +54,11 @@ class PaymentGateway
      * Executes payment based on the selected payment method.
      *
      * @param float $amount Payment amount
-     * @param Order $order Order object
+     * @param OxidOrder $order Order object
      * @return bool True on successful execution, false otherwise
      * @throws APIException
      */
-    public function executePayment(float $amount, Order $order): bool
+    public function executePayment(float $amount, OxidOrder $order): bool
     {
         $paymentMethods = [
             'gingerpaymentsideal' => 'ideal',

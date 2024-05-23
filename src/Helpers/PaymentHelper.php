@@ -4,6 +4,7 @@ namespace GingerPayments\Payments\Helpers;
 
 use GingerPayments\Payments\Builders\OrderBuilder;
 use GingerPayments\Payments\PSP\PSPConfig;
+use OxidEsales\EshopCommunity\Application\Model\Order as OxidOrder;
 use GingerPluginSdk\Exceptions\APIException;
 use OxidEsales\EshopCommunity\Core\Di\ContainerFacade;
 use OxidEsales\EshopCommunity\Core\Registry;
@@ -11,7 +12,6 @@ use OxidEsales\EshopCommunity\Internal\Framework\Module\Facade\ModuleSettingServ
 
 class PaymentHelper
 {
-
     protected GingerApiHelper $gingerApiHelper;
 
     /**
@@ -23,18 +23,22 @@ class PaymentHelper
     }
 
     /**
+     * @param float $totalAmount
+     * @param OxidOrder $order
+     * @param string $paymentMethod
+     * @return string
      * @throws APIException
      */
-    public function processPayment($totalAmount, $order, $paymentMethod): string
+    public function processPayment(float $totalAmount, OxidOrder $order, string $paymentMethod): string
     {
         $returnUrl = $this->getReturnUrl();
-        $order = OrderBuilder::buildOrder(
+        $orderSdk = OrderBuilder::buildOrder(
             totalAmount: $totalAmount,
             order: $order,
             paymentMethod: $paymentMethod,
             returnUrl: $returnUrl
         );
-        return $this->gingerApiHelper->sendOrder(order: $order)->getPaymentUrl();
+        return $this->gingerApiHelper->sendOrder(order: $orderSdk)->getPaymentUrl();
     }
 
     public function getApiKey(): string
@@ -53,27 +57,27 @@ class PaymentHelper
         return PSPConfig::ENDPOINT;
     }
 
+    /**
+     * @param string $apiKey
+     * @return bool
+     */
     private function isValidApiKeyFormat(string $apiKey): bool
     {
-        if (!ctype_alnum($apiKey)) {
-            return false;
-        }
-
-        if (preg_match('/[\'";--]|(\/\*)|(\*\/)|(\b(SELECT|INSERT|UPDATE|DELETE|DROP|UNION|JOIN|CREATE|ALTER|TRUNCATE|REPLACE)\b)/i', $apiKey)) {
-            return false;
-        }
-
-        if (preg_match('/<script|<\/script>|javascript:/i', $apiKey)) {
-            return false;
-        }
-
-        return true;
+        // Ensure API key is alphanumeric and doesn't contain SQL or JavaScript injection patterns
+        return ctype_alnum($apiKey) &&
+            !preg_match('/[\'";--]|(\/\*)|(\*\/)|(\b(SELECT|INSERT|UPDATE|DELETE|DROP|UNION|JOIN|CREATE|ALTER|TRUNCATE|REPLACE)\b)/i', $apiKey) &&
+            !preg_match('/<script|<\/script>|javascript:/i', $apiKey);
     }
 
     private function getReturnUrl(): string
     {
-        $shopUrl = Registry::getConfig()->getShopUrl();
-        return $shopUrl . 'index.php?cl=thankyou&sid=' . Registry::getSession()->getId();
+        $shopUrl = $this->getShopUrl();
+        $sessionId = Registry::getSession()->getId();
+        return $shopUrl . 'index.php?cl=thankyou&sid=' . $sessionId;
     }
 
+    private function getShopUrl(): string
+    {
+        return Registry::getConfig()->getShopUrl();
+    }
 }

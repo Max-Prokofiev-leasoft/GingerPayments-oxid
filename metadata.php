@@ -35,13 +35,13 @@ $aModule = [
         oxpaymentgateway::class => \GingerPayments\Payments\Model\PaymentGateway::class,
         \OxidEsales\Eshop\Application\Controller\OrderController::class => GingerPayments\Payments\Controller\ModuleOrderController::class,
     ],
-    'blocks' => [
-        [
-            'template' => 'page/checkout/payment.tpl',
-            'block' => 'select_payment',
-            'file' => '/views/blocks/page/checkout/gingerpayments.tpl'
-        ],
-    ],
+//    'blocks' => [
+//        [
+//            'template' => 'page/checkout/payment.tpl',
+//            'block' => 'select_payment',
+//            'file' => '/views/blocks/page/checkout/gingerpayments.tpl'
+//        ],
+//    ],
     'events' => [
         'onActivate' => '\GingerPayments\Payments\Core\ModuleEvents::onActivate',
         'onDeactivate' => '\GingerPayments\Payments\Core\ModuleEvents::onDeactivate'

@@ -8,14 +8,14 @@ use GingerPluginSdk\Entities\PaymentMethodDetails;
 use GingerPluginSdk\Entities\Transaction;
 use GingerPluginSdk\Properties\Amount;
 use GingerPluginSdk\Properties\Currency;
+use OxidEsales\EshopCommunity\Application\Model\Order as OxidOrder;
 
 class OrderBuilder
 {
-    public static function buildOrder($totalAmount, $order, $paymentMethod, $returnUrl): Order
+    public static function buildOrder(float $totalAmount, OxidOrder $order, string $paymentMethod, string $returnUrl): Order
     {
         // Build order entity
         $currency = new Currency(value: $order->getOrderCurrency()->name);
-
         $amount = new Amount(value: (int)($totalAmount * 100));
 
         $paymentMethodDetails = null;
@@ -24,7 +24,8 @@ class OrderBuilder
             $paymentMethodDetails->setPaymentMethodDetailsIdeal('');
         }
 
-        $transaction = new Transactions(new Transaction($paymentMethod, paymentMethodDetails: $paymentMethodDetails));
+
+        $transaction = new Transactions(new Transaction(paymentMethod: $paymentMethod, paymentMethodDetails: $paymentMethodDetails));
         return new Order(
             currency: $currency,
             amount: $amount,

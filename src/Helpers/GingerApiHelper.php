@@ -13,9 +13,11 @@ class GingerApiHelper
     protected Client $client;
 
     /**
+     * @param string $endpoint
+     * @param string $apiKey
      * @throws APIException
      */
-    public function __construct($endpoint,$apiKey)
+    public function __construct(string $endpoint,string $apiKey)
     {
         try { $clientOptions = new ClientOptions(endpoint: $endpoint, useBundle: true, apiKey: $apiKey);
             $this->client = new Client(options: $clientOptions);
@@ -27,6 +29,8 @@ class GingerApiHelper
     }
 
     /**
+     * @param Order $order
+     * @return Order
      * @throws APIException
      */
     public function sendOrder(Order $order): Order

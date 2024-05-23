@@ -6,10 +6,13 @@ use GingerPluginSdk\Collections\AdditionalAddresses;
 use GingerPluginSdk\Entities\Customer;
 use GingerPluginSdk\Entities\Address;
 use GingerPluginSdk\Properties\EmailAddress;
+use Monolog\Logger;
+use Monolog\Registry;
+use OxidEsales\EshopCommunity\Application\Model\Order as OxidOrder;
 
 class CustomerBuilder
 {
-    public static function buildCustomer($order): Customer
+    public static function buildCustomer(OxidOrder $order): Customer
     {
         // Build customer entity from order data
         $user = $order->getUser();
@@ -27,7 +30,7 @@ class CustomerBuilder
         );
     }
 
-    protected static function getCountryIso($user)
+    protected static function getCountryIso(object $user)
     {
         // Get country ISO code from user data
         $country = oxNew(\OxidEsales\Eshop\Application\Model\Country::class);
