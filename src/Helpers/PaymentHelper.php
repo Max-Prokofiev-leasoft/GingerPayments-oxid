@@ -14,12 +14,9 @@ class PaymentHelper
 {
     protected GingerApiHelper $gingerApiHelper;
 
-    /**
-     * @throws APIException
-     */
     public function __construct()
     {
-        $this->gingerApiHelper = new GingerApiHelper(endpoint: $this->getEndpoint(), apiKey: $this->getApiKey());
+        $this->gingerApiHelper = new GingerApiHelper();
     }
 
     /**
@@ -44,33 +41,6 @@ class PaymentHelper
         return $this->gingerApiHelper->sendOrder(order: $orderSdk)->getPaymentUrl();
     }
 
-    public function getApiKey(): string
-    {
-        $moduleSettingService = ContainerFacade::get(ModuleSettingServiceInterface::class);
-        $apiKey = $moduleSettingService->getString('gingerpayment_apikey', 'gingerpayments')->toString();
-
-        if (!$this->isValidApiKeyFormat($apiKey)) {
-            throw new \InvalidArgumentException('Invalid API key format.');
-        }
-        return $apiKey;
-    }
-
-    public function getEndpoint(): string
-    {
-        return PSPConfig::ENDPOINT;
-    }
-
-    /**
-     * @param string $apiKey
-     * @return bool
-     */
-    private function isValidApiKeyFormat(string $apiKey): bool
-    {
-        // Ensure API key is alphanumeric and doesn't contain SQL or JavaScript injection patterns
-        return ctype_alnum($apiKey) &&
-            !preg_match('/[\'";--]|(\/\*)|(\*\/)|(\b(SELECT|INSERT|UPDATE|DELETE|DROP|UNION|JOIN|CREATE|ALTER|TRUNCATE|REPLACE)\b)/i', $apiKey) &&
-            !preg_match('/<script|<\/script>|javascript:/i', $apiKey);
-    }
 
     private function getReturnUrl(): string
     {
@@ -87,10 +57,87 @@ class PaymentHelper
     /**
      * @return string
      */
-    private function getWebhookUrl($orderId)
+    private function getWebhookUrl($orderId): string
     {
-
-        $shopUrl = "https://3429-193-109-145-122.ngrok-free.app/";
+        $shopUrl = "https://9027-193-109-145-122.ngrok-free.app/";
         return $shopUrl . "widget.php/?cl=webhook&ox_order=" . $orderId;
     }
 }
+//class Ginger_Webhook
+//{
+//    public function __construct()
+//    {
+//        $input = json_decode(file_get_contents("php://input"), true);
+//        if (!in_array($input['event'], array("status_changed"))) {
+//            die("Only work to do if the status changed");
+//        }
+//
+//        $gingerOrderID = $input['order_id'];
+//
+//        $gingerOrder = $this->ginger_handle_get_order($gingerOrderID);
+//        $orderID = $gingerOrder->getMerchantOrderId()->get();
+//
+//        // Проверка на существование orderID
+//        if (!$orderID) {
+//            die("Order ID is missing.");
+//        }
+//
+//        $this->update_order_status($orderID, $gingerOrder->getStatus()->get());
+//    }
+//
+//    public function ginger_handle_get_order($gingerOrderID)
+//    {
+//
+//        $gingerClient = Ginger_ClientBuilder::gingerBuildClient();
+//
+//        try {
+//            if ($gingerClient) return $gingerClient->getOrder($gingerOrderID);
+//        } catch (Exception $exception) {
+//            $exceptionMessage = $exception->getMessage();
+//        }
+//        $errorMessage = $exceptionMessage ?? "COULD NOT GET ORDER";
+//        die($errorMessage);
+//    }
+//
+//    public function update_order_status($orderID, $newStatus)
+//    {
+//        // Преобразование статуса Ginger в статус Gambio
+//        $gambioStatus = $this->map_status($newStatus);
+//
+//        try {
+//            // Обновление статуса заказа в базе данных Gambio
+//            $data = array(
+//                'orders_status' => $gambioStatus,
+//                'last_modified' => 'now()'
+//            );
+//            xtc_db_perform(TABLE_ORDERS, $data, 'update', 'orders_id = ' . (int)$orderID);
+//
+//            // Добавление записи в таблицу orders_status_history
+//            $data_history = array(
+//                'orders_id' => (int)$orderID,
+//                'orders_status_id' => $gambioStatus,
+//                'date_added' => 'now()',
+//                'customer_notified' => '1',
+//                'comments' => 'Status updated to ' . $newStatus . ' via Ginger webhook'
+//            );
+//            xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $data_history);
+//
+//            echo "Статус ордера успешно обновлен.";
+//        } catch (Exception $e) {
+//            echo "Произошла ошибка при обновлении статуса ордера: " . $e->getMessage();
+//        }
+//    }
+//
+//    private function map_status($gingerStatus)
+//    {
+//        // Преобразование статуса Ginger в статус Gambio
+//        return match ($gingerStatus) {
+//            'processing' => 2,
+//            'completed' => 3,
+//            'cancelled', 'error' => 99,
+//            default => 1,
+//        };
+//    }
+//}
+//
+//new Ginger_Webhook();

@@ -7,23 +7,22 @@ use GingerPluginSdk\Client;
 use GingerPluginSdk\Properties\ClientOptions;
 use GingerPluginSdk\Entities\Order;
 use GingerPluginSdk\Exceptions\APIException;
+use OxidEsales\EshopCommunity\Core\Di\ContainerFacade;
+use OxidEsales\EshopCommunity\Internal\Framework\Module\Facade\ModuleSettingServiceInterface;
 
 class GingerApiHelper
 {
-    protected Client $client;
+    public Client $client;
 
     /**
-     * @param string $endpoint
-     * @param string $apiKey
      * @throws APIException
      */
-    public function __construct(string $endpoint,string $apiKey)
+    public function __construct()
     {
-        try { $clientOptions = new ClientOptions(endpoint: $endpoint, useBundle: true, apiKey: $apiKey);
+        try { $clientOptions = new ClientOptions(endpoint: $this->getEndpoint(), useBundle: true, apiKey: $this->getApiKey());
             $this->client = new Client(options: $clientOptions);
         }catch (\Exception $e) {
             throw new APIException("Failed to initialize Ginger API client: " . $e->getMessage(), $e->getCode(), $e);
-
         }
 
     }
@@ -41,5 +40,41 @@ class GingerApiHelper
         } catch (APIException $e) {
             throw new APIException("Error sending order: " . $e->getMessage());
         }
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function getOrder($orderId): Order
+    {
+        return $this->client->getOrder($orderId);
+
+    }
+    public function getEndpoint(): string
+    {
+        return PSPConfig::ENDPOINT;
+    }
+
+    /**
+     * @param string $apiKey
+     * @return bool
+     */
+    private function isValidApiKeyFormat(string $apiKey): bool
+    {
+        // Ensure API key is alphanumeric and doesn't contain SQL or JavaScript injection patterns
+        return ctype_alnum($apiKey) &&
+            !preg_match('/[\'";--]|(\/\*)|(\*\/)|(\b(SELECT|INSERT|UPDATE|DELETE|DROP|UNION|JOIN|CREATE|ALTER|TRUNCATE|REPLACE)\b)/i', $apiKey) &&
+            !preg_match('/<script|<\/script>|javascript:/i', $apiKey);
+    }
+
+    public function getApiKey(): string
+    {
+        $moduleSettingService = ContainerFacade::get(ModuleSettingServiceInterface::class);
+        $apiKey = $moduleSettingService->getString('gingerpayment_apikey', 'gingerpayments')->toString();
+
+        if (!$this->isValidApiKeyFormat($apiKey)) {
+            throw new \InvalidArgumentException('Invalid API key format.');
+        }
+        return $apiKey;
     }
 }

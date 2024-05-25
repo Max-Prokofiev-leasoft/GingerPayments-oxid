@@ -38,11 +38,5 @@ $aModule = [
             'type' => 'str',
             'value' => 'Please insert your API key'
         ],
-        [
-            'group' => 'gingerpayments_main',
-            'name' => 'sGingerPaymentsSecret',
-            'type' => 'str',
-            'value' => 'YourSecretKey'
-        ],
     ],
 ];
