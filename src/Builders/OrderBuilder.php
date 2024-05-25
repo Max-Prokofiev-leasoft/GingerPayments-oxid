@@ -9,6 +9,7 @@ use GingerPluginSdk\Entities\Transaction;
 use GingerPluginSdk\Properties\Amount;
 use GingerPluginSdk\Properties\Currency;
 use OxidEsales\EshopCommunity\Application\Model\Order as OxidOrder;
+use OxidEsales\EshopCommunity\Core\Registry;
 
 class OrderBuilder
 {
@@ -42,8 +43,8 @@ class OrderBuilder
             webhook_url: $webhookUrl,
             return_url: $returnUrl,
             id: $order->getId(),
-            merchantOrderId: "EXAMPLE001",
-            description: "Oxid order " . $order->getId() . " at " . $order->getShopId()
+            merchantOrderId: $order->getId(),
+            description: "Oxid order " .  " at " . $order->getShopId()
         );
     }
 }
