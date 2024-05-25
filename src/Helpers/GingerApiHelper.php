@@ -43,6 +43,8 @@ class GingerApiHelper
     }
 
     /**
+     * @param $orderId
+     * @return Order
      * @throws \Exception
      */
     public function getOrder($orderId): Order

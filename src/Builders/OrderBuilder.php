@@ -12,6 +12,14 @@ use OxidEsales\EshopCommunity\Application\Model\Order as OxidOrder;
 
 class OrderBuilder
 {
+    /**
+     * @param float $totalAmount
+     * @param OxidOrder $order
+     * @param string $paymentMethod
+     * @param string $returnUrl
+     * @param string $webhookUrl
+     * @return Order
+     */
     public static function buildOrder(float $totalAmount, OxidOrder $order, string $paymentMethod, string $returnUrl, string $webhookUrl): Order
     {
         // Build order entity

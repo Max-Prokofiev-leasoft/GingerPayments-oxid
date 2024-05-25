@@ -39,14 +39,12 @@ class WebhookController extends WidgetControl
     /**
      * @return string
      * @throws JsonExceptionAlias
-     * @throws APIException
-     * @throws Exception
      */
     public function init(): string
     {
         $data = $this->getApiData();
         $orderId = $this->getOrderId();
-        return $this->handleWebhook($data, $orderId, $gingerOrder = $this->handleApiOrder($data));
+        return $this->handleWebhook(data: $data, orderId:  $orderId, gingerOrder:  $gingerOrder = $this->handleApiOrder(data: $data));
     }
 
     /**
@@ -64,6 +62,10 @@ class WebhookController extends WidgetControl
         return Registry::getRequest()->getRequestParameter('ox_order');
     }
 
+    /**
+     * @param $apiStatus
+     * @return string
+     */
     private function mapStatus($apiStatus): string
     {
         return match ($apiStatus) {
@@ -78,6 +80,7 @@ class WebhookController extends WidgetControl
     /**
      * @param $data
      * @param $orderId
+     * @param $gingerOrder
      * @return int
      */
     private function handleWebhook($data, $orderId, $gingerOrder): int
@@ -119,6 +122,8 @@ class WebhookController extends WidgetControl
 
 
     /**
+     * @param $data
+     * @return Order
      * @throws Exception
      */
     private function handleApiOrder($data): Order
