@@ -32,11 +32,14 @@ class PaymentHelper
     public function processPayment(float $totalAmount, OxidOrder $order, string $paymentMethod): string
     {
         $returnUrl = $this->getReturnUrl();
+        $webhookUrl = $this->getWebhookUrl($order->getId());
         $orderSdk = OrderBuilder::buildOrder(
             totalAmount: $totalAmount,
             order: $order,
             paymentMethod: $paymentMethod,
-            returnUrl: $returnUrl
+            returnUrl: $returnUrl,
+            webhookUrl: $webhookUrl
+
         );
         return $this->gingerApiHelper->sendOrder(order: $orderSdk)->getPaymentUrl();
     }
@@ -79,5 +82,15 @@ class PaymentHelper
     private function getShopUrl(): string
     {
         return Registry::getConfig()->getShopUrl();
+    }
+
+    /**
+     * @return string
+     */
+    private function getWebhookUrl($orderId)
+    {
+
+        $shopUrl = "https://3429-193-109-145-122.ngrok-free.app/";
+        return $shopUrl . "widget.php/?cl=webhook&ox_order=" . $orderId;
     }
 }

@@ -47,7 +47,6 @@ class ModuleOrderController extends OrderController
 
                 //finalizing ordering process (validating, storing order into DB, executing payment, setting status ...)
                 $iSuccess = $order->finalizeOrder($basket, $user);
-
                 // performing special actions after user finishes order (assignment to special user groups)
                 $user->onOrderExecute($basket, $iSuccess);
 

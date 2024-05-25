@@ -39,7 +39,6 @@ class PaymentGateway
      */
     private function handlePayment(float $amount, OxidOrder $order, string $paymentMethod): void
     {
-
         $paymentUrl = $this->paymentHelper->processPayment(
             totalAmount: $amount,
             order: $order,

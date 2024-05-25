@@ -12,7 +12,7 @@ use OxidEsales\EshopCommunity\Application\Model\Order as OxidOrder;
 
 class OrderBuilder
 {
-    public static function buildOrder(float $totalAmount, OxidOrder $order, string $paymentMethod, string $returnUrl): Order
+    public static function buildOrder(float $totalAmount, OxidOrder $order, string $paymentMethod, string $returnUrl, string $webhookUrl): Order
     {
         // Build order entity
         $currency = new Currency(value: $order->getOrderCurrency()->name);
@@ -31,6 +31,7 @@ class OrderBuilder
             amount: $amount,
             transactions: $transaction,
             customer: CustomerBuilder::buildCustomer($order),
+            webhook_url: $webhookUrl,
             return_url: $returnUrl,
             id: $order->getId(),
             merchantOrderId: "EXAMPLE001",
