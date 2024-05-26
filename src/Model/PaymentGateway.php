@@ -1,7 +1,10 @@
 <?php
+
 namespace GingerPayments\Payments\Model;
 
 use GingerPayments\Payments\Helpers\PaymentHelper;
+use GingerPayments\Payments\Payments\CreditCardPayment;
+use GingerPayments\Payments\Payments\IdealPayment;
 use GingerPayments\Payments\PSP\PSPConfig;
 use GingerPluginSdk\Exceptions\APIException;
 use OxidEsales\EshopCommunity\Application\Model\Order as OxidOrder;
@@ -9,13 +12,18 @@ use OxidEsales\EshopCommunity\Core\Registry;
 
 class PaymentGateway
 {
+
+    private array $paymentMethods;
+
     public function __construct()
     {
         require_once PSPConfig::AUTOLOAD_FILE;
-        $this->paymentHelper = new PaymentHelper();
+        $this->paymentMethods = [
+            'gingerpaymentsideal' => new IdealPayment(),
+            'gingerpaymentscreditcard' => new CreditCardPayment()
+        ];
     }
 
-    private PaymentHelper $paymentHelper;
     private object $paymentInfo;
 
     /**
@@ -30,26 +38,6 @@ class PaymentGateway
     }
 
     /**
-     * Handles payment execution based on the selected payment method.
-     *
-     * @param float $amount Payment amount
-     * @param OxidOrder $order Order object
-     * @param string $paymentMethod Selected payment method
-     * @throws APIException
-     */
-    private function handlePayment(float $amount, OxidOrder $order, string $paymentMethod): void
-    {
-        $paymentUrl = $this->paymentHelper->processPayment(
-            totalAmount: $amount,
-            order: $order,
-            paymentMethod: $paymentMethod,
-        );
-        Registry::getSession()->setVariable('payment_url', $paymentUrl);
-
-//        return $paymentUrl;
-    }
-
-    /**
      * Executes payment based on the selected payment method.
      *
      * @param float $amount Payment amount
@@ -59,17 +47,16 @@ class PaymentGateway
      */
     public function executePayment(float $amount, OxidOrder $order): bool
     {
-        $paymentMethods = [
-            'gingerpaymentsideal' => 'ideal',
-            'gingerpaymentscreditcard' => 'credit-card'
-        ];
 
         $paymentId = @$this->paymentInfo->oxuserpayments__oxpaymentsid->value;
+        Registry::getLogger()->error($paymentId);
 
-        if (isset($paymentMethods[$paymentId])) {
-            $paymentMethod = $paymentMethods[$paymentId];
-            $this->handlePayment($amount, $order, $paymentMethod);
+        if (isset($this->paymentMethods[$paymentId])) {
+            $paymentMethod = $this->paymentMethods[$paymentId];
+            $paymentUrl = $paymentMethod->handlePayment($amount, $order);
+            Registry::getSession()->setVariable('payment_url', $paymentUrl);
         }
+        Registry::getLogger()->error("payment_url = " . Registry::getSession()->getVariable('payment_url'));
         return true;
     }
 }

@@ -49,13 +49,13 @@ class ModuleOrderController extends OrderController
                 $iSuccess = $order->finalizeOrder($basket, $user);
                 // performing special actions after user finishes order (assignment to special user groups)
                 $user->onOrderExecute($basket, $iSuccess);
-
+                Registry::getLogger($order->oxorder__oxpaymenttype->value);
                 if ($iSuccess === Order::ORDER_STATE_OK && $this->isGingerPaymentMethod($order->oxorder__oxpaymenttype->value)) {
                     $apiUrl = $session->getVariable('payment_url');
                     Registry::getUtils()->redirect($apiUrl, true, 302);
                 }
                 // proceeding to next view
-                Registry::getLogger()->error('yes');
+                Registry::getLogger()->error('Not Redirected');
                 return $this->getNextStep($iSuccess);
             } catch (OutOfStockException $oEx) {
                 $oEx->setDestination('basket');
