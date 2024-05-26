@@ -21,6 +21,7 @@ class WebhookController extends WidgetControl
     {
         parent::__construct();
         require_once PSPConfig::AUTOLOAD_FILE;
+        $this->gingerApiHelper = new GingerApiHelper();
 
     }
 
@@ -39,12 +40,19 @@ class WebhookController extends WidgetControl
     /**
      * @return string
      * @throws JsonExceptionAlias
+     * @throws Exception
      */
     public function init(): string
     {
-        $data = $this->getApiData();
-        $orderId = $this->getOrderId();
-        return $this->handleWebhook(data: $data, orderId:  $orderId, gingerOrder:  $gingerOrder = $this->handleApiOrder(data: $data));
+        try {
+            $data = $this->getApiData();
+            $orderId = $this->getOrderId();
+            $gingerOrder = $this->handleApiOrder(data: $data);
+            return $this->handleWebhook(data: $data, orderId:  $orderId, gingerOrder: $gingerOrder);
+        } catch (JsonExceptionAlias | Exception $e) {
+            http_response_code(500);
+            return "Internal Server Error: " . $e->getMessage();
+        }
     }
 
     /**
@@ -53,8 +61,12 @@ class WebhookController extends WidgetControl
      */
     private function getApiData(): mixed
     {
-        $input = file_get_contents("php://input");
-        return json_decode($input, true, 512, JSON_THROW_ON_ERROR);
+        static $data = null;
+        if ($data === null) {
+            $input = file_get_contents("php://input");
+            $data = json_decode($input, true, 512, JSON_THROW_ON_ERROR);
+        }
+        return $data;
     }
 
     private function getOrderId(): string|null
@@ -128,8 +140,11 @@ class WebhookController extends WidgetControl
      */
     private function handleApiOrder($data): Order
     {
-        $gingerOrderId = $data['order_id'];
-        return (new GingerApiHelper())->getOrder($gingerOrderId);
+        $gingerOrderId = $data['order_id'] ?? null;
+        if (!$gingerOrderId) {
+            throw new \RuntimeException("Order ID is missing in the API data.");
+        }
+        return $this->gingerApiHelper->getOrder($gingerOrderId);
     }
 }
 
