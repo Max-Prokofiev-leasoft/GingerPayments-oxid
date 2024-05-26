@@ -15,6 +15,7 @@ class ModuleOrderController extends OrderController
     {
         parent::init();
     }
+
     /**
      * Executes parent::execute(), adds API redirect logic if payment method matches.
      *
@@ -29,10 +30,8 @@ class ModuleOrderController extends OrderController
 
         if (!$this->validateTermsAndConditions()) {
             $this->_blConfirmAGBError = 1;
-
             return;
         }
-
         // additional check if we really really have a user now
         $user = $this->getUser();
         if (!$user) {
@@ -44,17 +43,13 @@ class ModuleOrderController extends OrderController
         if ($basket->getProductsCount()) {
             try {
                 $order = oxNew(Order::class);
-
-                //finalizing ordering process (validating, storing order into DB, executing payment, setting status ...)
                 $iSuccess = $order->finalizeOrder($basket, $user);
-                // performing special actions after user finishes order (assignment to special user groups)
                 $user->onOrderExecute($basket, $iSuccess);
-                Registry::getLogger($order->oxorder__oxpaymenttype->value);
+
                 if ($iSuccess === Order::ORDER_STATE_OK && $this->isGingerPaymentMethod($order->oxorder__oxpaymenttype->value)) {
                     $apiUrl = $session->getVariable('payment_url');
                     Registry::getUtils()->redirect($apiUrl, true, 302);
                 }
-                // proceeding to next view
                 Registry::getLogger()->error('Not Redirected');
                 return $this->getNextStep($iSuccess);
             } catch (OutOfStockException $oEx) {
