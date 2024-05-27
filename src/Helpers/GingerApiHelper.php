@@ -7,6 +7,7 @@ use GingerPluginSdk\Client;
 use GingerPluginSdk\Properties\ClientOptions;
 use GingerPluginSdk\Entities\Order;
 use GingerPluginSdk\Exceptions\APIException;
+use GingerPluginSdk\Properties\Currency;
 use OxidEsales\EshopCommunity\Core\Di\ContainerFacade;
 use OxidEsales\EshopCommunity\Internal\Framework\Module\Facade\ModuleSettingServiceInterface;
 
@@ -19,9 +20,10 @@ class GingerApiHelper
      */
     public function __construct()
     {
-        try { $clientOptions = new ClientOptions(endpoint: $this->getEndpoint(), useBundle: true, apiKey: $this->getApiKey());
+        try {
+            $clientOptions = new ClientOptions(endpoint: $this->getEndpoint(), useBundle: true, apiKey: $this->getApiKey());
             $this->client = new Client(options: $clientOptions);
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             throw new APIException("Failed to initialize Ginger API client: " . $e->getMessage(), $e->getCode(), $e);
         }
 
@@ -43,6 +45,19 @@ class GingerApiHelper
     }
 
     /**
+     * @param string $apiKey
+     * @return bool
+     */
+    private function isValidApiKeyFormat(string $apiKey): bool
+    {
+        // Ensure API key is alphanumeric and doesn't contain SQL or JavaScript injection patterns
+        return ctype_alnum($apiKey) &&
+            !preg_match('/[\'";\-\-]|(\/\*)|(\*\/)|(\b(SELECT|INSERT|UPDATE|DELETE|DROP|UNION|JOIN|CREATE|ALTER|TRUNCATE|REPLACE)\b)/i', $apiKey) &&
+            !preg_match('/<script|<\/script>|javascript:/i', $apiKey);
+    }
+
+
+    /**
      * @param $orderId
      * @return Order
      * @throws \Exception
@@ -52,21 +67,10 @@ class GingerApiHelper
         return $this->client->getOrder($orderId);
 
     }
+
     public function getEndpoint(): string
     {
         return PSPConfig::ENDPOINT;
-    }
-
-    /**
-     * @param string $apiKey
-     * @return bool
-     */
-    private function isValidApiKeyFormat(string $apiKey): bool
-    {
-        // Ensure API key is alphanumeric and doesn't contain SQL or JavaScript injection patterns
-        return ctype_alnum($apiKey) &&
-            !preg_match('/[\'";--]|(\/\*)|(\*\/)|(\b(SELECT|INSERT|UPDATE|DELETE|DROP|UNION|JOIN|CREATE|ALTER|TRUNCATE|REPLACE)\b)/i', $apiKey) &&
-            !preg_match('/<script|<\/script>|javascript:/i', $apiKey);
     }
 
     public function getApiKey(): string
