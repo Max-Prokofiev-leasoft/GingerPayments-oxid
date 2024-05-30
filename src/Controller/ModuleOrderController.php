@@ -11,28 +11,35 @@ use OxidEsales\Eshop\Core\Registry;
 
 class ModuleOrderController extends OrderController
 {
-    public function init()
+    /**
+     * Initializes the controller.
+     * Calls the parent init method.
+     *
+     * @return void
+     */
+    public function init(): void
     {
         parent::init();
     }
 
     /**
-     * Executes parent::execute(), adds API redirect logic if payment method matches.
+     * Executes the order process and handles API redirect logic if the payment method matches.
      *
      * @return string|null
+     * - Returns the next step if successful, 'user' if no user, or null if an error occurs.
      */
-    public function execute()
+    public function execute(): ?string
     {
         $session = Registry::getSession();
         if (!$session->checkSessionChallenge()) {
-            return;
+            return null;
         }
 
         if (!$this->validateTermsAndConditions()) {
             $this->_blConfirmAGBError = 1;
-            return;
+            return null;
         }
-        // additional check if we really really have a user now
+
         $user = $this->getUser();
         if (!$user) {
             return 'user';
@@ -61,21 +68,24 @@ class ModuleOrderController extends OrderController
                 Registry::getUtilsView()->addErrorToDisplay($oEx);
             }
         }
+        return null;
     }
 
     /**
-     * Check if the payment method is a custom API payment method
+     * Checks if the given payment method is a custom API payment method.
      *
-     * @param string $paymentType
+     * @param string $paymentId
+     * Selected payment method ID from the OXID
      * @return bool
+     * - Returns true if the payment method is a custom API payment method, otherwise false.
      */
-    private function isGingerPaymentMethod(string $paymentType): bool
+    private function isGingerPaymentMethod(string $paymentId): bool
     {
         $paymentMethods = [
             'gingerpaymentsideal',
             'gingerpaymentscreditcard'
         ];
 
-        return in_array($paymentType, $paymentMethods, true);
+        return in_array($paymentId, $paymentMethods, true);
     }
 }

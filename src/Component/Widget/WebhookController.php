@@ -17,6 +17,9 @@ class WebhookController extends WidgetControl
 {
     protected GingerApiHelper $gingerApiHelper;
 
+    /**
+     * Constructor to initialize the GingerApiHelper.
+     */
     public function __construct()
     {
         parent::__construct();
@@ -25,22 +28,35 @@ class WebhookController extends WidgetControl
 
     }
 
-    public function setClassKey()
-    {
-    }
-
-    public function setFncName()
-    {
-    }
-
-    public function setViewParameters()
+    /**
+     * Parent required method to set class key.
+     * @return void
+     */
+    public function setClassKey(): void
     {
     }
 
     /**
+     * Parent required method to set function name.
+     * @return void
+     */
+    public function setFncName(): void
+    {
+    }
+
+    /**
+     * Parent required method to set view parameters.
+     * @return void
+     */
+    public function setViewParameters(): void
+    {
+    }
+
+    /**
+     * Extended parent initialization method.
+     * Handles the webhook and returns the result.
      * @return string
-     * @throws JsonExceptionAlias
-     * @throws Exception
+     * - Result of handling webhook
      */
     public function init(): string
     {
@@ -56,7 +72,9 @@ class WebhookController extends WidgetControl
     }
 
     /**
+     * Retrieves data from the API request.
      * @return mixed
+     * - Data from API request
      * @throws JsonExceptionAlias
      */
     private function getApiData(): mixed
@@ -69,15 +87,25 @@ class WebhookController extends WidgetControl
         return $data;
     }
 
+
+    /**
+     * Retrieves the OXID Order ID from the request parameters.
+     * @return string|null
+     * - OXID Order ID
+     */
     private function getOrderId(): string|null
     {
         return Registry::getRequest()->getRequestParameter('ox_order');
     }
 
     /**
-     * @param $apiStatus
+     * Maps the Ginger API status to the OXID order status.
+     * @param string $apiStatus
+     * Status from Ginger API
      * @return string
+     * - Mapped Oxid order status
      */
+
     private function mapStatus($apiStatus): string
     {
         return match ($apiStatus) {
@@ -90,10 +118,15 @@ class WebhookController extends WidgetControl
     }
 
     /**
-     * @param $data
-     * @param $orderId
-     * @param $gingerOrder
+     * Handles the webhook and updates the OXID order status based on the API data.
+     * @param array $data
+     * Data from API request
+     * @param string $orderId
+     * OXID order ID
+     * @param Order $gingerOrder
+     * Ginger order
      * @return int
+     * - Webhook response status
      */
     private function handleWebhook($data, $orderId, $gingerOrder): int
     {
@@ -134,11 +167,14 @@ class WebhookController extends WidgetControl
 
 
     /**
-     * @param $data
+     * Retrieves the Ginger order based on the API data.
+     * @param array $data
+     * Data from API request
      * @return Order
+     * - SDK Order
      * @throws Exception
      */
-    private function handleApiOrder($data): Order
+    private function handleApiOrder(array $data): Order
     {
         $gingerOrderId = $data['order_id'] ?? null;
         if (!$gingerOrderId) {

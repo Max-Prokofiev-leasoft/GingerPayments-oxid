@@ -76,7 +76,7 @@ class GingerApiHelper
     public function getApiKey(): string
     {
         $moduleSettingService = ContainerFacade::get(ModuleSettingServiceInterface::class);
-        $apiKey = $moduleSettingService->getString('gingerpayment_apikey', 'gingerpayments')->toString();
+        $apiKey = $moduleSettingService->getString('gingerpayments_apikey', 'gingerpayments')->toString();
 
         if (!$this->isValidApiKeyFormat($apiKey)) {
             throw new \InvalidArgumentException('Invalid API key format.');

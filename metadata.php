@@ -35,7 +35,7 @@ $aModule = [
     'settings' => [
         [
             'group' => 'gingerpayments_main',
-            'name' => 'gingerpayment_apikey',
+            'name' => 'gingerpayments_apikey',
             'type' => 'str',
             'value' => 'Please insert your API key'
         ],

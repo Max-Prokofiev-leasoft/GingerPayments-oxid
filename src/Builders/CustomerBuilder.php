@@ -13,8 +13,12 @@ use OxidEsales\EshopCommunity\Application\Model\Order as OxidOrder;
 class CustomerBuilder
 {
     /**
+     * Builds a SDK Customer entity from the given OXID order.
+     *
      * @param OxidOrder $order
+     * OXID Order
      * @return Customer
+     * - SDK Customer
      */
     public static function buildCustomer(OxidOrder $order): Customer
     {
@@ -40,10 +44,14 @@ class CustomerBuilder
     }
 
     /**
+     * Retrieves the ISO country code from the given OXID user object.
+     *
      * @param object $user
-     * @return mixed
+     * OXID User object
+     * @return string
+     * - Country ISO from OXID User object
      */
-    protected static function getCountryIso(object $user)
+    protected static function getCountryIso(object $user): mixed
     {
         // Get country ISO code from user data
         $country = oxNew(\OxidEsales\Eshop\Application\Model\Country::class);

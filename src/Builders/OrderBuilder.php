@@ -14,12 +14,20 @@ use OxidEsales\EshopCommunity\Core\Registry;
 class OrderBuilder
 {
     /**
+     * Builds an SDK Order object from the given OXID order data.
+     *
      * @param float $totalAmount
+     * OXID Order total amount
      * @param OxidOrder $order
+     * OXID Order
      * @param string $paymentMethod
+     * Name of the payment method
      * @param string $returnUrl
+     * Return url for SDK order
      * @param string $webhookUrl
+     * Webhook url for SDK order
      * @return Order
+     * - SDK order object
      */
     public static function buildOrder(float $totalAmount, OxidOrder $order, string $paymentMethod, string $returnUrl, string $webhookUrl): Order
     {
