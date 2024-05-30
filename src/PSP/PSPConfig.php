@@ -4,6 +4,10 @@ namespace GingerPayments\Payments\PSP;
 use OxidEsales\EshopCommunity\Core\Di\ContainerFacade;
 use OxidEsales\EshopCommunity\Internal\Framework\Module\Facade\ModuleSettingServiceInterface;
 
+/**
+ * Class PSPConfig
+ * Defines configuration constants for the Ginger Payments module.
+ */
 class PSPConfig
 {
 

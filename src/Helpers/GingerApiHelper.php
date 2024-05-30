@@ -11,11 +11,17 @@ use GingerPluginSdk\Properties\Currency;
 use OxidEsales\EshopCommunity\Core\Di\ContainerFacade;
 use OxidEsales\EshopCommunity\Internal\Framework\Module\Facade\ModuleSettingServiceInterface;
 
+/**
+ * Class GingerApiHelper
+ * Provides helper functions for interacting with the Ginger Payments API.
+ */
 class GingerApiHelper
 {
     public Client $client;
 
     /**
+     * Initializes the Ginger API client with the endpoint and API key.
+     *
      * @throws APIException
      */
     public function __construct()
@@ -30,14 +36,16 @@ class GingerApiHelper
     }
 
     /**
+     * Sends an order to the Ginger Payments API.
+     *
      * @param Order $order
+     * SDK Order
      * @return Order
      * @throws APIException
      */
     public function sendOrder(Order $order): Order
     {
         try {
-            // Send order to Ginger Payments API
             return $this->client->sendOrder($order);
         } catch (APIException $e) {
             throw new APIException("Error sending order: " . $e->getMessage());
@@ -45,6 +53,8 @@ class GingerApiHelper
     }
 
     /**
+     * Validates the format of the API key to ensure it is safe and correct.
+     *
      * @param string $apiKey
      * @return bool
      */
@@ -56,29 +66,43 @@ class GingerApiHelper
             !preg_match('/<script|<\/script>|javascript:/i', $apiKey);
     }
 
-
     /**
-     * @param $orderId
+     * Retrieves an order from the Ginger API by order ID.
+     *
+     * @param string $orderId
+     * SDK Order ID
      * @return Order
+     * - SDK Order
      * @throws \Exception
      */
-    public function getOrder($orderId): Order
+    public function getOrder(string $orderId): Order
     {
         return $this->client->getOrder($orderId);
 
     }
 
+    /**
+     * Retrieves the endpoint URL for the Ginger Payments API.
+     *
+     * @return string
+     */
     public function getEndpoint(): string
     {
         return PSPConfig::ENDPOINT;
     }
 
+    /**
+     * Retrieves and validates the API key from the module settings.
+     *
+     * @return string
+     * @throws \InvalidArgumentException
+     */
     public function getApiKey(): string
     {
         $moduleSettingService = ContainerFacade::get(ModuleSettingServiceInterface::class);
         $apiKey = $moduleSettingService->getString('gingerpayments_apikey', 'gingerpayments')->toString();
 
-        if (!$this->isValidApiKeyFormat($apiKey)) {
+        if (!$this->isValidApiKeyFormat(apiKey: $apiKey)) {
             throw new \InvalidArgumentException('Invalid API key format.');
         }
         return $apiKey;

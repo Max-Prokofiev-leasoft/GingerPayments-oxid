@@ -9,6 +9,10 @@ use OxidEsales\Eshop\Application\Controller\PaymentController;
 use OxidEsales\EshopCommunity\Core\Registry;
 use OxidEsales\EshopCommunity\Application\Model\DeliverySetList;
 
+/**
+ * Class ModulePaymentController
+ * Extends the default OXID PaymentController to integrate Ginger Payments API functionality.
+ */
 class ModulePaymentController extends PaymentController
 {
     private GingerApiHelper $gingerApiHelper;
@@ -42,7 +46,7 @@ class ModulePaymentController extends PaymentController
      * @return string
      * - Valid payment name if it's a Payment Method from Ginger Plugin
      */
-    private function mapPaymentMethod($paymentId): string
+    private function mapPaymentMethod(string $paymentId): string
     {
         return match ($paymentId) {
             'gingerpaymentscreditcard' => 'credit-card',
@@ -72,7 +76,7 @@ class ModulePaymentController extends PaymentController
                 $sActShipSet = Registry::getSession()->getVariable('sShipSet');
             }
 
-            $session = \OxidEsales\Eshop\Core\Registry::getSession();
+            $session = Registry::getSession();
             $oBasket = $session->getBasket();
 
             list($aAllSets, $sActShipSet, $aPaymentList) =
@@ -81,16 +85,15 @@ class ModulePaymentController extends PaymentController
             $oBasket->setShipping($sActShipSet);
 
             $shopCurrency = Registry::getConfig()->getActShopCurrencyObject()->name;
-            $currency = new Currency($shopCurrency);
+            $currency = new Currency(value: $shopCurrency);
 
             foreach ($aPaymentList as $paymentId => $payment) {
-                $mappedPaymentMethod = $this->mapPaymentMethod($paymentId);
-                if (($mappedPaymentMethod !== $paymentId) && !$this->gingerApiHelper->client->checkAvailabilityForPaymentMethodUsingCurrency($mappedPaymentMethod, $currency)) {
+                $mappedPaymentMethod = $this->mapPaymentMethod(paymentId: $paymentId);
+                if (($mappedPaymentMethod !== $paymentId) && !$this->gingerApiHelper->client->checkAvailabilityForPaymentMethodUsingCurrency(payment_method_name: $mappedPaymentMethod, currency: $currency)) {
                     unset($aPaymentList[$paymentId]);
                 }
             }
 
-            // calculating payment expences for preview for each payment
             $this->setValues($aPaymentList, $oBasket);
             $this->_oPaymentList = $aPaymentList;
             $this->_aAllSets = $aAllSets;

@@ -12,7 +12,10 @@ use OxidEsales\Eshop\Core\WidgetControl;
 use OxidEsales\EshopCommunity\Core\Registry;
 use Symfony\Component\Routing\Annotation\Route;
 
-
+/**
+ * Class WebhookController
+ * Handles webhook requests from the Ginger Payments API.
+ */
 class WebhookController extends WidgetControl
 {
     protected GingerApiHelper $gingerApiHelper;
@@ -64,8 +67,8 @@ class WebhookController extends WidgetControl
             $data = $this->getApiData();
             $orderId = $this->getOrderId();
             $gingerOrder = $this->handleApiOrder(data: $data);
-            return $this->handleWebhook(data: $data, orderId:  $orderId, gingerOrder: $gingerOrder);
-        } catch (JsonExceptionAlias | Exception $e) {
+            return $this->handleWebhook(data: $data, orderId: $orderId, gingerOrder: $gingerOrder);
+        } catch (JsonExceptionAlias|Exception $e) {
             http_response_code(500);
             return "Internal Server Error: " . $e->getMessage();
         }
@@ -87,7 +90,6 @@ class WebhookController extends WidgetControl
         return $data;
     }
 
-
     /**
      * Retrieves the OXID Order ID from the request parameters.
      * @return string|null
@@ -105,8 +107,7 @@ class WebhookController extends WidgetControl
      * @return string
      * - Mapped Oxid order status
      */
-
-    private function mapStatus($apiStatus): string
+    private function mapStatus(string $apiStatus): string
     {
         return match ($apiStatus) {
             'completed' => 'PAID',
@@ -128,7 +129,7 @@ class WebhookController extends WidgetControl
      * @return int
      * - Webhook response status
      */
-    private function handleWebhook($data, $orderId, $gingerOrder): int
+    private function handleWebhook(array $data, string $orderId, Order $gingerOrder): int
     {
         if (!$orderId) {
             http_response_code(404);
@@ -141,9 +142,9 @@ class WebhookController extends WidgetControl
         }
 
         $apiOrderStatus = $gingerOrder->getStatus()->get();
-        $oxidOrderStatus = $this->mapStatus($apiOrderStatus);
-        $order = oxNew(\oxorder::class);
+        $oxidOrderStatus = $this->mapStatus(apiStatus:  $apiOrderStatus);
 
+        $order = oxNew(\oxorder::class);
         if ($order->load($orderId)) {
             $order->oxorder__oxtransstatus = new \OxidEsales\Eshop\Core\Field($oxidOrderStatus);
             switch ($oxidOrderStatus) {
@@ -180,7 +181,7 @@ class WebhookController extends WidgetControl
         if (!$gingerOrderId) {
             throw new \RuntimeException("Order ID is missing in the API data.");
         }
-        return $this->gingerApiHelper->getOrder($gingerOrderId);
+        return $this->gingerApiHelper->getOrder(orderId: $gingerOrderId);
     }
 }
 
