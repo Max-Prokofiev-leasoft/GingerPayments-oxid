@@ -49,14 +49,12 @@ class PaymentGateway
     {
 
         $paymentId = @$this->paymentInfo->oxuserpayments__oxpaymentsid->value;
-        Registry::getLogger()->error($paymentId);
 
         if (isset($this->paymentMethods[$paymentId])) {
             $paymentMethod = $this->paymentMethods[$paymentId];
-            $paymentUrl = $paymentMethod->handlePayment($amount, $order);
+            $paymentUrl = $paymentMethod->handlePayment(amount:$amount,order: $order);
             Registry::getSession()->setVariable('payment_url', $paymentUrl);
         }
-        Registry::getLogger()->error("payment_url = " . Registry::getSession()->getVariable('payment_url'));
         return true;
     }
 }
