@@ -3,6 +3,7 @@
 namespace GingerPayments\Payments\Controller;
 
 use GingerPayments\Payments\Helpers\GingerApiHelper;
+use GingerPayments\Payments\Helpers\PaymentHelper;
 use GingerPayments\Payments\PSP\PSPConfig;
 use GingerPluginSdk\Properties\Currency;
 use OxidEsales\Eshop\Application\Controller\PaymentController;
@@ -16,6 +17,7 @@ use OxidEsales\EshopCommunity\Application\Model\DeliverySetList;
 class ModulePaymentController extends PaymentController
 {
     private GingerApiHelper $gingerApiHelper;
+    private PaymentHelper $paymentHelper;
 
     /**
      * Constructor to initialize GingerApiHelper.
@@ -25,6 +27,7 @@ class ModulePaymentController extends PaymentController
         parent::__construct();
         require_once PSPConfig::AUTOLOAD_FILE;
         $this->gingerApiHelper = new GingerApiHelper();
+        $this->paymentHelper = new PaymentHelper();
     }
 
     /**
@@ -36,23 +39,6 @@ class ModulePaymentController extends PaymentController
     public function init(): void
     {
         parent::init();
-    }
-
-    /**
-     * Maps OXID payment ID to Ginger Plugin payment method name.
-     *
-     * @param string $paymentId
-     * Payment ID from OXID
-     * @return string
-     * - Valid payment name if it's a Payment Method from Ginger Plugin
-     */
-    private function mapPaymentMethod(string $paymentId): string
-    {
-        return match ($paymentId) {
-            'gingerpaymentscreditcard' => 'credit-card',
-            'gingerpaymentsideal' => 'ideal',
-            default => $paymentId,
-        };
     }
 
     /**
@@ -88,7 +74,7 @@ class ModulePaymentController extends PaymentController
             $currency = new Currency(value: $shopCurrency);
 
             foreach ($aPaymentList as $paymentId => $payment) {
-                $mappedPaymentMethod = $this->mapPaymentMethod(paymentId: $paymentId);
+                $mappedPaymentMethod = $this->paymentHelper->mapPaymentMethod(paymentId: $paymentId);
                 if (($mappedPaymentMethod !== $paymentId) && !$this->gingerApiHelper->client->checkAvailabilityForPaymentMethodUsingCurrency(payment_method_name: $mappedPaymentMethod, currency: $currency)) {
                     unset($aPaymentList[$paymentId]);
                 }

@@ -4,6 +4,7 @@ namespace GingerPayments\Payments\Component\Widget;
 
 use Exception;
 use GingerPayments\Payments\Helpers\GingerApiHelper;
+use GingerPayments\Payments\Helpers\PaymentHelper;
 use GingerPayments\Payments\PSP\PSPConfig;
 use GingerPluginSdk\Entities\Order;
 use GingerPluginSdk\Exceptions\APIException;
@@ -19,6 +20,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class WebhookController extends WidgetControl
 {
     protected GingerApiHelper $gingerApiHelper;
+    protected PaymentHelper $paymentHelper;
 
     /**
      * Constructor to initialize the GingerApiHelper.
@@ -28,6 +30,7 @@ class WebhookController extends WidgetControl
         parent::__construct();
         require_once PSPConfig::AUTOLOAD_FILE;
         $this->gingerApiHelper = new GingerApiHelper();
+        $this->paymentHelper = new PaymentHelper();
 
     }
 
@@ -101,24 +104,6 @@ class WebhookController extends WidgetControl
     }
 
     /**
-     * Maps the Ginger API status to the OXID order status.
-     * @param string $apiStatus
-     * Status from Ginger API
-     * @return string
-     * - Mapped Oxid order status
-     */
-    private function mapStatus(string $apiStatus): string
-    {
-        return match ($apiStatus) {
-            'completed' => 'PAID',
-            'processing' => 'PROCESSING',
-            'cancelled' => 'CANCELLED',
-            'expired' => 'EXPIRED',
-            default => 'NEW',
-        };
-    }
-
-    /**
      * Handles the webhook and updates the OXID order status based on the API data.
      * @param array $data
      * Data from API request
@@ -142,7 +127,7 @@ class WebhookController extends WidgetControl
         }
 
         $apiOrderStatus = $gingerOrder->getStatus()->get();
-        $oxidOrderStatus = $this->mapStatus(apiStatus:  $apiOrderStatus);
+        $oxidOrderStatus = $this->paymentHelper->mapApiStatus(apiStatus:  $apiOrderStatus);
 
         $order = oxNew(\oxorder::class);
         if ($order->load($orderId)) {

@@ -2,6 +2,9 @@
 
 namespace GingerPayments\Payments\Controller;
 
+use GingerPayments\Payments\Helpers\GingerApiHelper;
+use GingerPayments\Payments\Helpers\PaymentHelper;
+use GingerPayments\Payments\PSP\PSPConfig;
 use OxidEsales\Eshop\Application\Controller\OrderController;
 use OxidEsales\Eshop\Application\Model\Order;
 use OxidEsales\Eshop\Core\Exception\ArticleInputException;
@@ -15,6 +18,18 @@ use OxidEsales\Eshop\Core\Registry;
  */
 class ModuleOrderController extends OrderController
 {
+    private PaymentHelper $paymentHelper;
+
+    /**
+     * Constructor to initialize GingerApiHelper.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        require_once PSPConfig::AUTOLOAD_FILE;
+        $this->paymentHelper = new PaymentHelper();
+    }
+
     /**
      * Initializes the controller.
      * Calls the parent init method.
@@ -57,7 +72,7 @@ class ModuleOrderController extends OrderController
                 $iSuccess = $order->finalizeOrder($basket, $user);
                 $user->onOrderExecute($basket, $iSuccess);
 
-                if ($iSuccess === Order::ORDER_STATE_OK && $this->isGingerPaymentMethod(paymentId:  $order->oxorder__oxpaymenttype->value)) {
+                if ($iSuccess === Order::ORDER_STATE_OK && $this->paymentHelper->isGingerPaymentMethod(paymentId: $order->oxorder__oxpaymenttype->value)) {
                     $apiUrl = $session->getVariable('payment_url');
                     Registry::getUtils()->redirect($apiUrl, true, 302);
                 }
@@ -75,21 +90,5 @@ class ModuleOrderController extends OrderController
         return null;
     }
 
-    /**
-     * Checks if the given payment method is a custom API payment method.
-     *
-     * @param string $paymentId
-     * Selected payment method ID from the OXID
-     * @return bool
-     * - Returns true if the payment method is a custom API payment method, otherwise false.
-     */
-    private function isGingerPaymentMethod(string $paymentId): bool
-    {
-        $paymentMethods = [
-            'gingerpaymentsideal',
-            'gingerpaymentscreditcard'
-        ];
 
-        return in_array($paymentId, $paymentMethods, true);
-    }
 }

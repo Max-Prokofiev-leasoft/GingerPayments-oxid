@@ -55,6 +55,59 @@ class PaymentHelper
     }
 
     /**
+     * Checks if the given payment method is a custom API payment method.
+     *
+     * @param string $paymentId
+     * Selected payment method ID from the OXID
+     * @return bool
+     * - Returns true if the payment method is a custom API payment method, otherwise false.
+     */
+    public function isGingerPaymentMethod(string $paymentId): bool
+    {
+        $paymentMethods = [
+            'gingerpaymentsideal',
+            'gingerpaymentscreditcard'
+        ];
+
+        return in_array($paymentId, $paymentMethods, true);
+    }
+
+    /**
+     * Maps OXID payment ID to Ginger Plugin payment method name.
+     *
+     * @param string $paymentId
+     * Payment ID from OXID
+     * @return string
+     * - Valid payment name if it's a Payment Method from Ginger Plugin
+     */
+    public function mapPaymentMethod(string $paymentId): string
+    {
+        return match ($paymentId) {
+            'gingerpaymentscreditcard' => 'credit-card',
+            'gingerpaymentsideal' => 'ideal',
+            default => $paymentId,
+        };
+    }
+
+    /**
+     * Maps the Ginger API status to the OXID order status.
+     * @param string $apiStatus
+     * Status from Ginger API
+     * @return string
+     * - Mapped Oxid order status
+     */
+    public function mapApiStatus(string $apiStatus): string
+    {
+        return match ($apiStatus) {
+            'completed' => 'PAID',
+            'processing' => 'PROCESSING',
+            'cancelled' => 'CANCELLED',
+            'expired' => 'EXPIRED',
+            default => 'NEW',
+        };
+    }
+
+    /**
      * Retrieves the return URL for the SDK Order.
      *
      * @return string
