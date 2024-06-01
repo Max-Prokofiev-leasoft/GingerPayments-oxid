@@ -43,15 +43,14 @@ class PaymentHelper
     {
         $returnUrl = $this->getReturnUrl();
         $webhookUrl = $this->getWebhookUrl($order->getId());
-        $orderSdk = OrderBuilder::buildOrder(
+        $orderSdk = new OrderBuilder(
             totalAmount: $totalAmount,
             order: $order,
             paymentMethod: $paymentMethod,
             returnUrl: $returnUrl,
             webhookUrl: $webhookUrl
-
         );
-        return $this->gingerApiHelper->sendOrder(order: $orderSdk)->getPaymentUrl();
+        return $this->gingerApiHelper->sendOrder(order: $orderSdk->buildOrder())->getPaymentUrl();
     }
 
     /**

@@ -2,7 +2,7 @@
 
 namespace GingerPayments\Payments\Builders;
 
-use GingerPluginSdk\Collections\OrderLines;
+use GingerPayments\Payments\Helpers\GingerApiHelper;
 use GingerPluginSdk\Collections\Transactions;
 use GingerPluginSdk\Entities\Order;
 use GingerPluginSdk\Entities\PaymentMethodDetails;
@@ -13,37 +13,49 @@ use OxidEsales\EshopCommunity\Application\Model\Order as OxidOrder;
 
 class OrderBuilder
 {
+    private float $totalAmount;
+    private OxidOrder $order;
+    private string $paymentMethod;
+    private string $returnUrl;
+    private string $webhookUrl;
+    private CustomerBuilder $customerBuilder;
+    private OrderLinesBuilder $orderLinesBuilder;
+    protected GingerApiHelper $gingerApiHelper;
+
+    public function __construct(float $totalAmount, OxidOrder $order, string $paymentMethod, string $returnUrl, string $webhookUrl)
+    {
+        $this->totalAmount = $totalAmount;
+        $this->order = $order;
+        $this->paymentMethod = $paymentMethod;
+        $this->returnUrl = $returnUrl;
+        $this->webhookUrl = $webhookUrl;
+        $this->customerBuilder = new CustomerBuilder($order);
+        $this->orderLinesBuilder = new OrderLinesBuilder($order);
+        $this->gingerApiHelper = new GingerApiHelper();
+    }
+
     /**
      * Builds an SDK Order object from the given OXID order data.
      *
-     * @param float $totalAmount
-     * OXID Order total amount
-     * @param OxidOrder $order
-     * OXID Order
-     * @param string $paymentMethod
-     * Name of the payment method
-     * @param string $returnUrl
-     * Return url for SDK order
-     * @param string $webhookUrl
-     * Webhook url for SDK order
      * @return Order
      * - SDK order object
      */
-    public static function buildOrder(float $totalAmount, OxidOrder $order, string $paymentMethod, string $returnUrl, string $webhookUrl): Order
+    public function buildOrder(): Order
     {
-        $paymentMethodDetails = self::buildPaymentMethodDetails($paymentMethod);
+        $paymentMethodDetails = $this->buildPaymentMethodDetails($this->paymentMethod);
 
         return new Order(
-            currency: self::buildCurrency(order: $order),
-            amount: self::buildAmount(totalAmount: $totalAmount),
-            transactions: self::buildTransactions(paymentMethod: $paymentMethod, paymentMethodDetails: $paymentMethodDetails),
-            customer: CustomerBuilder::buildCustomer(order: $order),
-            orderLines: OrderLinesBuilder::buildOrderLines($order),
-            webhook_url: $webhookUrl,
-            return_url: $returnUrl,
-            id: $order->getId(),
-            merchantOrderId: $order->getId(),
-            description: self::buildDescription(order: $order),
+            currency: $this->buildCurrency($this->order),
+            amount: $this->buildAmount($this->totalAmount),
+            transactions: $this->buildTransactions($this->paymentMethod, $paymentMethodDetails),
+            customer: $this->customerBuilder->buildCustomer(),
+            orderLines: $this->orderLinesBuilder->buildOrderLines(),
+            client: $this->gingerApiHelper->getClientExtra(),
+            webhook_url: $this->webhookUrl,
+            return_url: $this->returnUrl,
+            id: $this->order->getId(),
+            merchantOrderId: $this->order->getId(),
+            description: $this->buildDescription($this->order),
         );
     }
 
@@ -55,7 +67,7 @@ class OrderBuilder
      * @return Currency
      * - SDK Currency object
      */
-    private static function buildCurrency(OxidOrder $order): Currency
+    private function buildCurrency(OxidOrder $order): Currency
     {
         return new Currency(value: $order->getOrderCurrency()->name);
     }
@@ -68,7 +80,7 @@ class OrderBuilder
      * @return Amount
      * - SDK Amount object
      */
-    private static function buildAmount(float $totalAmount): Amount
+    private function buildAmount(float $totalAmount): Amount
     {
         return new Amount(value: (int)($totalAmount * 100));
     }
@@ -81,7 +93,7 @@ class OrderBuilder
      * @return PaymentMethodDetails|null
      * - SDK PaymentMethodDetails object or null
      */
-    private static function buildPaymentMethodDetails(string $paymentMethod): ?PaymentMethodDetails
+    private function buildPaymentMethodDetails(string $paymentMethod): ?PaymentMethodDetails
     {
         if ($paymentMethod === 'ideal') {
             $paymentMethodDetails = new PaymentMethodDetails();
@@ -101,7 +113,7 @@ class OrderBuilder
      * @return Transactions
      * - SDK Transactions object
      */
-    private static function buildTransactions(string $paymentMethod, ?PaymentMethodDetails $paymentMethodDetails): Transactions
+    private function buildTransactions(string $paymentMethod, ?PaymentMethodDetails $paymentMethodDetails): Transactions
     {
         return new Transactions(new Transaction(paymentMethod: $paymentMethod, paymentMethodDetails: $paymentMethodDetails));
     }
@@ -114,9 +126,8 @@ class OrderBuilder
      * @return string
      * - Description string
      */
-    private static function buildDescription(OxidOrder $order): string
+    private function buildDescription(OxidOrder $order): string
     {
         return "Oxid order " . $order->getId() . " at shop " . $order->getShopId();
     }
-
 }

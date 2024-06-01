@@ -4,10 +4,10 @@ namespace GingerPayments\Payments\Helpers;
 
 use GingerPayments\Payments\PSP\PSPConfig;
 use GingerPluginSdk\Client;
+use GingerPluginSdk\Entities\Client as ClientEntity;
 use GingerPluginSdk\Properties\ClientOptions;
 use GingerPluginSdk\Entities\Order;
 use GingerPluginSdk\Exceptions\APIException;
-use GingerPluginSdk\Properties\Currency;
 use OxidEsales\EshopCommunity\Core\Di\ContainerFacade;
 use OxidEsales\EshopCommunity\Internal\Framework\Module\Facade\ModuleSettingServiceInterface;
 
@@ -30,9 +30,8 @@ class GingerApiHelper
             $clientOptions = new ClientOptions(endpoint: $this->getEndpoint(), useBundle: true, apiKey: $this->getApiKey());
             $this->client = new Client(options: $clientOptions);
         } catch (\Exception $e) {
-            throw new APIException("Failed to initialize Ginger API client: " . $e->getMessage(), $e->getCode(), $e);
+            throw new APIException(message: "Failed to initialize Ginger API client: " . $e->getMessage(), code: $e->getCode(), previous: $e);
         }
-
     }
 
     /**
@@ -78,7 +77,6 @@ class GingerApiHelper
     public function getOrder(string $orderId): Order
     {
         return $this->client->getOrder($orderId);
-
     }
 
     /**
@@ -86,9 +84,76 @@ class GingerApiHelper
      *
      * @return string
      */
-    public function getEndpoint(): string
+    private function getEndpoint(): string
     {
         return PSPConfig::ENDPOINT;
+    }
+
+    /**
+     * Retrieves the platform name for the Ginger Payments API.
+     *
+     * @return string
+     */
+    private function getPlatformName(): string
+    {
+        return PSPConfig::PLATFORM_NAME;
+    }
+
+    /**
+     * Retrieves the platform version for the Ginger Payments API.
+     *
+     * @return string
+     */
+    private function getPlatformVersion(): string
+    {
+        return PSPConfig::PLATFORM_VERSION;
+    }
+
+    /**
+     * Retrieves the plugin name for the Ginger Payments API.
+     *
+     * @return string
+     */
+    private function getPluginName(): string
+    {
+        return PSPConfig::PLUGIN_NAME;
+    }
+
+    /**
+     * Retrieves the plugin version for the Ginger Payments API.
+     *
+     * @return string
+     */
+    private function getPluginVersion(): string
+    {
+        return PSPConfig::PLUGIN_VERSION;
+    }
+
+    /**
+     * Retrieves the user agent from the server.
+     *
+     * @return string
+     */
+    private function getUserAgent(): string
+    {
+        return $_SERVER['HTTP_USER_AGENT'];
+    }
+
+    /**
+     * Retrieves the extra info from the client for Ginger API.
+     *
+     * @return ClientEntity
+     * @throws \InvalidArgumentException
+     */
+    public function getClientExtra(): ClientEntity
+    {
+        return new ClientEntity(
+            userAgent: $this->getUserAgent(),
+            platformName: $this->getPlatformName(),
+            platformVersion: $this->getPlatformVersion(),
+            pluginName: $this->getPluginName(),
+            pluginVersion: $this->getPluginVersion()
+        );
     }
 
     /**

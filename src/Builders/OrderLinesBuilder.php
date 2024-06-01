@@ -11,17 +11,22 @@ use OxidEsales\EshopCommunity\Application\Model\Order as OxidOrder;
 
 class OrderLinesBuilder
 {
+    private OxidOrder $order;
+
+    public function __construct(OxidOrder $order)
+    {
+        $this->order = $order;
+    }
+
     /**
      * Builds OrderLines object from the given OXID order.
      *
-     * @param OxidOrder $order
-     * OXID Order
      * @return OrderLines
      * - SDK OrderLines object
      */
-    public static function buildOrderLines(OxidOrder $order): OrderLines
+    public function buildOrderLines(): OrderLines
     {
-        $orderArticles = $order->getOrderArticles();
+        $orderArticles = $this->order->getOrderArticles();
         $lines = [];
 
         foreach ($orderArticles as $orderArticle) {
@@ -39,7 +44,7 @@ class OrderLinesBuilder
                 quantity: (int)$orderArticle->oxorderarticles__oxamount->value,
                 amount: new Amount((int)($orderArticle->oxorderarticles__oxbrutprice->value * 100)),
                 vatPercentage: new VatPercentage((int)($orderArticle->oxorderarticles__oxvat->value * 100)),
-                currency: new Currency($order->getOrderCurrency()->name),
+                currency: new Currency($this->order->getOrderCurrency()->name),
                 discountRate: $discountRateValue,
                 url: $article->getLink()
             );
@@ -47,8 +52,8 @@ class OrderLinesBuilder
             $lines[] = $line;
         }
 
-        if ($order->oxorder__oxdelcost->value > 0) {
-            $lines[] = self::getShippingOrderLine($order);
+        if ($this->order->oxorder__oxdelcost->value > 0) {
+            $lines[] = $this->getShippingOrderLine();
         }
 
         return new OrderLines(...$lines);
@@ -57,38 +62,34 @@ class OrderLinesBuilder
     /**
      * Creates a shipping order line.
      *
-     * @param OxidOrder $order
-     * OXID Order
      * @return Line
      * - SDK Line object for shipping
      */
-    protected static function getShippingOrderLine(OxidOrder $order): Line
+    protected function getShippingOrderLine(): Line
     {
         $shippingAmount = (float)(
-        $order->oxorder__oxdelcost->value
+        $this->order->oxorder__oxdelcost->value
         );
 
         return new Line(
             type: 'shipping_fee',
             merchantOrderLineId: 'Shipping',
-            name: self::getShippingName($order),
+            name: $this->getShippingName(),
             quantity: 1,
             amount: new Amount((int)($shippingAmount * 100)),
             vatPercentage: new VatPercentage((int)(0)),
-            currency: new Currency($order->getOrderCurrency()->name)
+            currency: new Currency($this->order->getOrderCurrency()->name)
         );
     }
 
     /**
      * Retrieves the shipping name from the order.
      *
-     * @param OxidOrder $order
-     * OXID Order
      * @return string
      * - Shipping name
      */
-    protected static function getShippingName(OxidOrder $order): string
+    protected function getShippingName(): string
     {
-        return preg_replace("/[^A-Za-z0-9 ]/", "", $order->oxorder__oxdeltype->value);
+        return preg_replace("/[^A-Za-z0-9 ]/", "", $this->order->oxorder__oxdeltype->value);
     }
 }

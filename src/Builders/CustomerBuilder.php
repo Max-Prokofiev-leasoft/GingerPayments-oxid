@@ -15,33 +15,39 @@ use OxidEsales\EshopCommunity\Core\Registry;
 
 class CustomerBuilder
 {
+    private OxidOrder $order;
+
+    public function __construct(OxidOrder $order)
+    {
+        $this->order = $order;
+    }
+
     /**
      * Builds a SDK Customer entity from the given OXID order.
      *
-     * @param OxidOrder $order
-     * OXID Order
      * @return Customer
      * - SDK Customer
      */
-    public static function buildCustomer(OxidOrder $order): Customer
+    public function buildCustomer(): Customer
     {
-        $user = $order->getUser();
+        $user = $this->order->getUser();
 
         $billingAddress = new Address(
             addressType: 'billing',
             postalCode: $user->oxuser__oxzip->value,
-            country: new Country(self::getCountryIso(object: $user)),
-            address: $user->oxuser__oxstreet->value." ".$user->oxuser__oxstreetnr->value." ".$user->oxuser__oxzip->value." ".$user->oxuser__oxcity->value,
+            country: new Country($this->getCountryIso($user)),
+            address: $user->oxuser__oxstreet->value . " " . $user->oxuser__oxstreetnr->value . " " . $user->oxuser__oxzip->value . " " . $user->oxuser__oxcity->value,
         );
-        $deliveryAddressInfo = $order->getDelAddressInfo();
+
+        $deliveryAddressInfo = $this->order->getDelAddressInfo();
         $addresses = [$billingAddress];
 
         if ($deliveryAddressInfo) {
             $deliveryAddress = new Address(
                 addressType: 'delivery',
                 postalCode: $deliveryAddressInfo->oxaddress__oxzip->value,
-                country: new Country(self::getCountryIso(object: $deliveryAddressInfo)),
-                address: $deliveryAddressInfo->oxaddress__oxstreet->value." ".$deliveryAddressInfo->oxaddress__oxstreetnr->value." ".$deliveryAddressInfo->oxaddress__oxzip->value." ".$deliveryAddressInfo->oxaddress__oxcity->value,
+                country: new Country($this->getCountryIso($deliveryAddressInfo)),
+                address: $deliveryAddressInfo->oxaddress__oxstreet->value . " " . $deliveryAddressInfo->oxaddress__oxstreetnr->value . " " . $deliveryAddressInfo->oxaddress__oxzip->value . " " . $deliveryAddressInfo->oxaddress__oxcity->value,
             );
             $addresses[] = $deliveryAddress;
         }
@@ -60,11 +66,11 @@ class CustomerBuilder
             additionalAddresses: $additionalAddresses,
             firstName: $user->oxuser__oxfname->value,
             lastName: $user->oxuser__oxlname->value,
-            emailAddress: new EmailAddress(value: $user->oxuser__oxusername->value),
-            gender: self::mapGender($user->oxuser__oxsal->value),
+            emailAddress: new EmailAddress($user->oxuser__oxusername->value),
+            gender: $this->mapGender($user->oxuser__oxsal->value),
             phoneNumbers: $phoneNumbers ?: null,
             birthdate: $user->oxuser__oxbirthdate->value ? new Birthdate($user->oxuser__oxbirthdate->value) : null,
-            country: new Country(self::getCountryIso(object: $user)),
+            country: new Country($this->getCountryIso($user)),
             ipAddress: $_SERVER['REMOTE_ADDR'] ?? null,
             locale: new Locale(Registry::getLang()->getLanguageAbbr()),
             merchantCustomerId: $user->oxuser__oxid->value,
@@ -83,7 +89,7 @@ class CustomerBuilder
      * @return string
      * - Country ISO from OXID User object
      */
-    protected static function getCountryIso(object $object): string
+    protected function getCountryIso(object $object): string
     {
         $country = oxNew(\OxidEsales\Eshop\Application\Model\Country::class);
         $country->load($object->oxaddress__oxcountryid->value ?? $object->oxuser__oxcountryid->value);
@@ -98,7 +104,7 @@ class CustomerBuilder
      * @return string|null
      * - Mapped gender value or null if not applicable
      */
-    protected static function mapGender(string $oxidGender): ?string
+    protected function mapGender(string $oxidGender): ?string
     {
         return match (strtolower($oxidGender)) {
             'mr' => 'male',
@@ -107,3 +113,4 @@ class CustomerBuilder
         };
     }
 }
+
