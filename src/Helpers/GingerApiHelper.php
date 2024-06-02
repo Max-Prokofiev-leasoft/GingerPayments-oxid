@@ -17,14 +17,15 @@ use OxidEsales\EshopCommunity\Internal\Framework\Module\Facade\ModuleSettingServ
  */
 class GingerApiHelper
 {
+    private static ?GingerApiHelper $instance = null;
     public Client $client;
 
     /**
-     * Initializes the Ginger API client with the endpoint and API key.
+     * Private constructor to prevent creating a new instance of the class via the `new` operator from outside of this class.
      *
      * @throws APIException
      */
-    public function __construct()
+    private function __construct()
     {
         try {
             $clientOptions = new ClientOptions(endpoint: $this->getEndpoint(), useBundle: true, apiKey: $this->getApiKey());
@@ -32,6 +33,20 @@ class GingerApiHelper
         } catch (\Exception $e) {
             throw new APIException(message: "Failed to initialize Ginger API client: " . $e->getMessage(), code: $e->getCode(), previous: $e);
         }
+    }
+
+    /**
+     * Retrieves the single instance of this class.
+     *
+     * @return GingerApiHelper
+     */
+    public static function getInstance(): GingerApiHelper
+    {
+        if (self::$instance === null) {
+            self::$instance = new GingerApiHelper();
+        }
+
+        return self::$instance;
     }
 
     /**

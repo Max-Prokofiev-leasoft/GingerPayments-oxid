@@ -31,7 +31,7 @@ class OrderBuilder
         $this->webhookUrl = $webhookUrl;
         $this->customerBuilder = new CustomerBuilder($order);
         $this->orderLinesBuilder = new OrderLinesBuilder($order);
-        $this->gingerApiHelper = new GingerApiHelper();
+        $this->gingerApiHelper = GingerApiHelper::getInstance();
     }
 
     /**

@@ -10,6 +10,7 @@ use GingerPluginSdk\Properties\EmailAddress;
 use GingerPluginSdk\Properties\Country;
 use GingerPluginSdk\Properties\Birthdate;
 use GingerPluginSdk\Properties\Locale;
+use OxidEsales\Eshop\Core\Exception\LanguageNotFoundException;
 use OxidEsales\EshopCommunity\Application\Model\Order as OxidOrder;
 use OxidEsales\EshopCommunity\Core\Registry;
 
@@ -27,6 +28,7 @@ class CustomerBuilder
      *
      * @return Customer
      * - SDK Customer
+     * @throws LanguageNotFoundException
      */
     public function buildCustomer(): Customer
     {

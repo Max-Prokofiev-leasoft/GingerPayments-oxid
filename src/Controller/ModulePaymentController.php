@@ -26,8 +26,8 @@ class ModulePaymentController extends PaymentController
     {
         parent::__construct();
         require_once PSPConfig::AUTOLOAD_FILE;
-        $this->gingerApiHelper = new GingerApiHelper();
-        $this->paymentHelper = new PaymentHelper();
+        $this->gingerApiHelper = GingerApiHelper::getInstance();
+        $this->paymentHelper = PaymentHelper::getInstance();
     }
 
     /**
