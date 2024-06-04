@@ -73,8 +73,8 @@ class OrderLinesBuilder
 
         return new Line(
             type: 'shipping_fee',
-            merchantOrderLineId: 'Shipping',
-            name: $this->getShippingName(),
+            merchantOrderLineId: $this->getShippingName(),
+            name: 'Shipping',
             quantity: 1,
             amount: new Amount((int)($shippingAmount * 100)),
             vatPercentage: new VatPercentage((int)(0)),
