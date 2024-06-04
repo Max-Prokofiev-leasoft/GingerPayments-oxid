@@ -65,7 +65,7 @@ class OrderLinesBuilder
      * @return Line
      * - SDK Line object for shipping
      */
-    protected function getShippingOrderLine(): Line
+    private function getShippingOrderLine(): Line
     {
         $shippingAmount = (float)(
         $this->order->oxorder__oxdelcost->value
@@ -73,7 +73,7 @@ class OrderLinesBuilder
 
         return new Line(
             type: 'shipping_fee',
-            merchantOrderLineId: $this->getShippingName(),
+            merchantOrderLineId: $this->getShippingId(),
             name: 'Shipping',
             quantity: 1,
             amount: new Amount((int)($shippingAmount * 100)),
@@ -88,7 +88,7 @@ class OrderLinesBuilder
      * @return string
      * - Shipping name
      */
-    protected function getShippingName(): string
+    protected function getShippingId(): string
     {
         return preg_replace("/[^A-Za-z0-9 ]/", "", $this->order->oxorder__oxdeltype->value);
     }
