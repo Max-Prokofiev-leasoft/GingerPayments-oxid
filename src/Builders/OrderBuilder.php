@@ -9,6 +9,7 @@ use GingerPluginSdk\Entities\PaymentMethodDetails;
 use GingerPluginSdk\Entities\Transaction;
 use GingerPluginSdk\Properties\Amount;
 use GingerPluginSdk\Properties\Currency;
+use OxidEsales\Eshop\Core\Exception\LanguageNotFoundException;
 use OxidEsales\EshopCommunity\Application\Model\Order as OxidOrder;
 
 class OrderBuilder
@@ -39,6 +40,7 @@ class OrderBuilder
      *
      * @return Order
      * - SDK order object
+     * @throws LanguageNotFoundException
      */
     public function buildOrder(): Order
     {
