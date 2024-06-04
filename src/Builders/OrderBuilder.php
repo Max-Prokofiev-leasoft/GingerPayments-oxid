@@ -53,7 +53,6 @@ class OrderBuilder
             client: $this->gingerApiHelper->getClientExtra(),
             webhook_url: $this->webhookUrl,
             return_url: $this->returnUrl,
-            id: $this->order->getId(),
             merchantOrderId: $this->order->getId(),
             description: $this->buildDescription($this->order),
         );
