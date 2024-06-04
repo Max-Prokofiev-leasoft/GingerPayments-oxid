@@ -21,24 +21,30 @@ use Symfony\Component\Console\Output\BufferedOutput;
  */
 final class ModuleEvents
 {
-//**
-//* Execute action on activate event.
-//*
-//* @return void
-//*/
+    /**
+     * Execute action on module activation event.
+     *
+     * @return void
+     */
     public static function onActivate(): void
     {
         self::addGingerpaymentsPaymentMethods();
     }
 
+    /**
+     * Execute action on module deactivation event.
+     *
+     * @return void
+     */
     public static function onDeactivate(): void
     {
         self::removeGingerpaymentsPaymentMethods();
     }
 
     /**
-     * Adds ginger payment methods
+     * Adds Ginger payment methods to the shop.
      *
+     * @return void
      */
     public static function addGingerpaymentsPaymentMethods(): void
     {
@@ -75,11 +81,15 @@ final class ModuleEvents
         unset($oPayment);
     }
 
+    /**
+     * Removes Ginger payment methods from the shop.
+     *
+     * @return void
+     */
     public static function removeGingerpaymentsPaymentMethods(): void
     {
         $aPayments = [
             'gingerpaymentscreditcard',
-            'gingerpaymentssepa',
             'gingerpaymentsideal'
         ];
         $oPayment = oxNew(\OxidEsales\Eshop\Application\Model\Payment::class);

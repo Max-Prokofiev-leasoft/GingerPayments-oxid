@@ -2,57 +2,66 @@
 
 namespace GingerPayments\Payments\Model;
 
-
 use GingerPayments\Payments\Helpers\PaymentHelper;
+use GingerPayments\Payments\Payments\CreditCardPayment;
+use GingerPayments\Payments\Payments\Factory\PaymentFactory;
+use GingerPayments\Payments\Payments\IdealPayment;
+use GingerPayments\Payments\PSP\PSPConfig;
 use GingerPluginSdk\Exceptions\APIException;
+use OxidEsales\EshopCommunity\Application\Model\Order as OxidOrder;
+use OxidEsales\EshopCommunity\Core\Registry;
 
-
+/**
+ * Class PaymentGateway
+ *
+ * This class is responsible for handling the execution of payments based on the selected payment method.
+ * It supports multiple payment methods and integrates with the Ginger Payments SDK.
+ */
 class PaymentGateway
 {
+    private PaymentHelper $paymentHelper;
+    /**
+     * Initializes the PaymentGateway class.
+     *
+     * The constructor loads the PSP configuration file and initializes Payment Helper.
+     */
     public function __construct()
     {
-        require_once PaymentHelper::AUTOLOAD_FILE;
-        $this->paymentHelper = new PaymentHelper();
+        require_once PSPConfig::AUTOLOAD_FILE;
+        $this->paymentHelper = PaymentHelper::getInstance();
     }
 
-    private PaymentHelper $paymentHelper;
     private object $paymentInfo;
 
     /**
      * Sets payment parameters.
      *
      * @param object $userPayment User payment object
+     * @return void
      */
-    public function setPaymentParams($userPayment)
+    public function setPaymentParams(object $userPayment): void
     {
-        // store data
         $this->paymentInfo = &$userPayment;
     }
 
     /**
-     * @throws APIException
+     * Executes payment based on the selected payment method.
+     *
+     * @param float $amount Payment amount
+     * @param OxidOrder $order OXID Order
+     * @return bool
+     * - True on successful execution
      */
-    public function executePayment($amount, &$order)
+    public function executePayment(float $amount, OxidOrder $order): bool
     {
-        $paymentMethods = [
-            'gingerpaymentsideal' => 'ideal',
-            'gingerpaymentscreditcard' => 'credit-card'
-        ];
-
         $paymentId = @$this->paymentInfo->oxuserpayments__oxpaymentsid->value;
 
-        if (isset($paymentMethods[$paymentId])) {
-            $paymentMethod = $paymentMethods[$paymentId];
-            $payment_redirect = $this->paymentHelper->processPayment(
-                totalAmount: $amount,
-                order: $order,
-                paymentMethod: $paymentMethod
-            );
-            header("Location: $payment_redirect");
-            exit();
+        if ($this->paymentHelper->isGingerPaymentMethod(paymentId: $paymentId))
+        {
+            $paymentMethod = PaymentFactory::createPayment(paymentId: $paymentId);
+            $paymentUrl = $paymentMethod->handlePayment(amount: $amount, order: $order);
+            Registry::getSession()->setVariable('payment_url', $paymentUrl);
         }
-        return false;
+        return true;
     }
-
-
 }
