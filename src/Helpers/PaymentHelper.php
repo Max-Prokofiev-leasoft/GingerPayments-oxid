@@ -117,7 +117,7 @@ class PaymentHelper
             'processing' => 'PROCESSING',
             'cancelled' => 'CANCELLED',
             'expired' => 'EXPIRED',
-            default => 'NEW',
+            default => 'PENDING',
         };
     }
 
