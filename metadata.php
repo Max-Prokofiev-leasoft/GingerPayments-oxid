@@ -37,13 +37,43 @@ $aModule = [
             'group' => 'gingerpayments_main',
             'name' => 'gingerpayments_apikey',
             'type' => 'str',
-            'value' => ''
+            'value' => '',
         ],
         [
             'group' => 'gingerpayments_main',
             'name' => 'gingerpayments_cacert',
             'type' => 'bool',
             'value' => 'false'
+        ],
+        [
+            'group' => 'gingerpayments_additional',
+            'name' => 'gingerpayments_pending_status',
+            'type' => 'str',
+            'value' => 'PENDING'
+        ],
+        [
+            'group' => 'gingerpayments_additional',
+            'name' => 'gingerpayments_processing_status',
+            'type' => 'str',
+            'value' => 'PROCESSING'
+        ],
+        [
+            'group' => 'gingerpayments_additional',
+            'name' => 'gingerpayments_completed_status',
+            'type' => 'str',
+            'value' => 'PAID'
+        ],
+        [
+            'group' => 'gingerpayments_additional',
+            'name' => 'gingerpayments_cancelled_status',
+            'type' => 'str',
+            'value' => 'CANCELLED'
+        ],
+        [
+            'group' => 'gingerpayments_additional',
+            'name' => 'gingerpayments_expired_status',
+            'type' => 'str',
+            'value' => 'EXPIRED'
         ],
 
     ],

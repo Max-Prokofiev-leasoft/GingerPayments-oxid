@@ -112,13 +112,32 @@ class PaymentHelper
      */
     public function mapApiStatus(string $apiStatus): string
     {
+        $status = $this->getShopOrderStatus();
         return match ($apiStatus) {
-            'completed' => 'PAID',
-            'processing' => 'PROCESSING',
-            'cancelled' => 'CANCELLED',
-            'expired' => 'EXPIRED',
-            default => 'PENDING',
+            'completed' => $status['paid'],
+            'processing' => $status['processing'],
+            'cancelled' => $status['cancelled'],
+            'expired' => $status['expired'],
+            default => $status['pending'],
         };
+    }
+
+    public function getShopOrderStatus(): array
+    {
+        $statusList = [];
+        $moduleSettingService = ContainerFacade::get(ModuleSettingServiceInterface::class);
+        $pendingStatus = $moduleSettingService->getString('gingerpayments_pending_status', 'gingerpayments')->toString();
+        $processingStatus = $moduleSettingService->getString('gingerpayments_processing_status', 'gingerpayments')->toString();
+        $cancelledStatus = $moduleSettingService->getString('gingerpayments_cancelled_status','gingerpayments')->toString();
+        $expiredStatus = $moduleSettingService->getString('gingerpayments_expired_status', 'gingerpayments')->toString();
+        $paidStatus = $moduleSettingService->getString('gingerpayments_completed_status', 'gingerpayments')->toString();
+        return [
+            'pending' => $pendingStatus,
+            'processing' => $processingStatus,
+            'cancelled' => $cancelledStatus,
+            'expired' => $expiredStatus,
+            'paid' => $paidStatus,
+        ];
     }
 
     /**
@@ -155,7 +174,7 @@ class PaymentHelper
      */
     private function getWebhookUrl(string $orderId): string
     {
-        $shopUrl = "https://e85f-2a02-2378-1082-2fc6-4c6b-89c6-462e-c8cb.ngrok-free.app" . "/";
+        $shopUrl = "https://30d3-193-109-145-122.ngrok-free.app" . "/";
         return $shopUrl . "widget.php/?cl=webhook&ox_order=" . $orderId;
     }
 }

@@ -128,16 +128,20 @@ class WebhookController extends WidgetControl
 
         $apiOrderStatus = $gingerOrder->getStatus()->get();
         $oxidOrderStatus = $this->paymentHelper->mapApiStatus(apiStatus:  $apiOrderStatus);
+        $expectedStatus = $this->paymentHelper->getShopOrderStatus();
 
         $order = oxNew(\oxorder::class);
         if ($order->load($orderId)) {
             $order->oxorder__oxtransstatus = new \OxidEsales\Eshop\Core\Field($oxidOrderStatus);
             switch ($oxidOrderStatus) {
-                case 'EXPIRED':
-                case 'CANCELLED':
+                case $expectedStatus['expired']:
+                    $order->oxorder__oxremark = new \OxidEsales\Eshop\Core\Field('Order marked as expired.');
                     $order->oxorder__oxstorno = new \OxidEsales\Eshop\Core\Field(1);
                     break;
-                case 'PAID':
+                case $expectedStatus['cancelled']:
+                    $order->oxorder__oxstorno = new \OxidEsales\Eshop\Core\Field(1);
+                    break;
+                case $expectedStatus['paid']:
                     $order->oxorder__oxpaid = new \OxidEsales\Eshop\Core\Field(date('Y-m-d H:i:s'));
                     break;
             }
