@@ -9,6 +9,7 @@ use GingerPluginSdk\Properties\ClientOptions;
 use GingerPluginSdk\Entities\Order;
 use GingerPluginSdk\Exceptions\APIException;
 use OxidEsales\EshopCommunity\Core\Di\ContainerFacade;
+use OxidEsales\EshopCommunity\Core\Registry;
 use OxidEsales\EshopCommunity\Internal\Framework\Module\Facade\ModuleSettingServiceInterface;
 
 /**
@@ -28,7 +29,7 @@ class GingerApiHelper
     private function __construct()
     {
         try {
-            $clientOptions = new ClientOptions(endpoint: $this->getEndpoint(), useBundle: true, apiKey: $this->getApiKey());
+            $clientOptions = new ClientOptions(endpoint: $this->getEndpoint(), useBundle: $this->isCacertCheck() , apiKey: $this->getApiKey());
             $this->client = new Client(options: $clientOptions);
         } catch (\Exception $e) {
             throw new APIException(message: "Failed to initialize Ginger API client: " . $e->getMessage(), code: $e->getCode(), previous: $e);
@@ -169,6 +170,20 @@ class GingerApiHelper
             pluginName: $this->getPluginName(),
             pluginVersion: $this->getPluginVersion()
         );
+    }
+
+    /**
+     *  Checks if the CACert setting is enabled.
+     *
+     *  This method retrieves the boolean value of the 'gingerpayments_cacert' setting from the module settings.
+     * @return bool
+     * - True if the CACert setting is enabled, false otherwise.
+     */
+    private function isCacertCheck(): bool
+    {
+        $moduleSettingService = ContainerFacade::get(ModuleSettingServiceInterface::class);
+        return $moduleSettingService->getBoolean('gingerpayments_cacert', 'gingerpayments');
+
     }
 
     /**

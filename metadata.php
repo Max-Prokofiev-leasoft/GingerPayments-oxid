@@ -37,7 +37,14 @@ $aModule = [
             'group' => 'gingerpayments_main',
             'name' => 'gingerpayments_apikey',
             'type' => 'str',
-            'value' => 'Please insert your API key'
+            'value' => ''
         ],
+        [
+            'group' => 'gingerpayments_main',
+            'name' => 'gingerpayments_cacert',
+            'type' => 'bool',
+            'value' => 'false'
+        ],
+
     ],
 ];
