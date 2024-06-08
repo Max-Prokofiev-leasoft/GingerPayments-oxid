@@ -3,8 +3,9 @@
 namespace GingerPayments\Payments\Payments;
 
 use GingerPayments\Payments\Helpers\PaymentHelper;
-use GingerPayments\Payments\Interfaces\BasePaymentInterface;
+use GingerPayments\Payments\Interfaces\FactoryInterface\BasePaymentInterface;
 use GingerPluginSdk\Exceptions\APIException;
+use OxidEsales\Eshop\Core\Exception\LanguageNotFoundException;
 use OxidEsales\EshopCommunity\Core\Registry;
 use OxidEsales\EshopCommunity\Application\Model\Order as OxidOrder;
 
@@ -34,6 +35,7 @@ class IdealPayment implements BasePaymentInterface
      * @return string
      * - URL to process payment or payment confirmation
      * @throws APIException
+     * @throws LanguageNotFoundException
      */
     public function handlePayment(float $amount, OxidOrder $order): string
     {

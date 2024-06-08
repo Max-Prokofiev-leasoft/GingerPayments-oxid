@@ -3,7 +3,10 @@
 namespace GingerPayments\Payments\Helpers;
 
 use GingerPayments\Payments\Builders\OrderBuilder;
+use GingerPayments\Payments\Component\StrategyComponentRegister;
+use GingerPayments\Payments\Interfaces\StrategyInterface\ExampleGetWebhookUrlStrategy;
 use GingerPayments\Payments\PSP\PSPConfig;
+use OxidEsales\Eshop\Core\Exception\LanguageNotFoundException;
 use OxidEsales\EshopCommunity\Application\Model\Order as OxidOrder;
 use GingerPluginSdk\Exceptions\APIException;
 use OxidEsales\EshopCommunity\Core\Di\ContainerFacade;
@@ -53,6 +56,7 @@ class PaymentHelper
      * @return string
      * - URL to process payment
      * @throws APIException
+     * @throws LanguageNotFoundException
      */
     public function processPayment(float $totalAmount, OxidOrder $order, string $paymentMethod): string
     {
@@ -122,9 +126,20 @@ class PaymentHelper
         };
     }
 
+    /**
+     * Retrieves the shop order statuses from the module settings.
+     *
+     * This method uses the ModuleSettingServiceInterface to fetch various
+     * order statuses (pending, processing, cancelled, expired, and paid)
+     * for the 'gingerpayments' module.
+     *
+     * @return array
+     * - An associative array of shop order statuses with keys
+     * 'pending', 'processing', 'cancelled', 'expired', and 'paid', each
+     * mapped to their respective status values as strings.
+     **/
     public function getShopOrderStatus(): array
     {
-        $statusList = [];
         $moduleSettingService = ContainerFacade::get(ModuleSettingServiceInterface::class);
         $pendingStatus = $moduleSettingService->getString('gingerpayments_pending_status', 'gingerpayments')->toString();
         $processingStatus = $moduleSettingService->getString('gingerpayments_processing_status', 'gingerpayments')->toString();

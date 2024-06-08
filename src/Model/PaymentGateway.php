@@ -2,7 +2,9 @@
 
 namespace GingerPayments\Payments\Model;
 
+use GingerPayments\Payments\Component\StrategyComponentRegister;
 use GingerPayments\Payments\Helpers\PaymentHelper;
+use GingerPayments\Payments\Interfaces\StrategyInterface\ExampleGetWebhookUrlStrategy;
 use GingerPayments\Payments\Payments\CreditCardPayment;
 use GingerPayments\Payments\Payments\Factory\PaymentFactory;
 use GingerPayments\Payments\Payments\IdealPayment;
@@ -23,11 +25,13 @@ class PaymentGateway
     /**
      * Initializes the PaymentGateway class.
      *
-     * The constructor loads the PSP configuration file and initializes Payment Helper.
+     * The constructor loads the PSP configuration file, registers strategy components,
+     * and initializes the Payment Helper.
      */
     public function __construct()
     {
         require_once PSPConfig::AUTOLOAD_FILE;
+        PSPConfig::registerStrategies();
         $this->paymentHelper = PaymentHelper::getInstance();
     }
 

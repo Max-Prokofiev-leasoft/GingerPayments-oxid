@@ -2,7 +2,7 @@
 
 namespace GingerPayments\Payments\Payments\Factory;
 
-use GingerPayments\Payments\Interfaces\BasePaymentInterface;
+use GingerPayments\Payments\Interfaces\FactoryInterface\BasePaymentInterface;
 use GingerPayments\Payments\Payments\CreditCardPayment;
 use GingerPayments\Payments\Payments\IdealPayment;
 

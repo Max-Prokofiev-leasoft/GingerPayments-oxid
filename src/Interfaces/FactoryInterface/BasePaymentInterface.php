@@ -1,6 +1,6 @@
 <?php
 
-namespace GingerPayments\Payments\Interfaces;
+namespace GingerPayments\Payments\Interfaces\FactoryInterface;
 
 use OxidEsales\EshopCommunity\Application\Model\Order as OxidOrder;
 

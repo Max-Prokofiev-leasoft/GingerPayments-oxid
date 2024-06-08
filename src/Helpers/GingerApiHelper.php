@@ -29,7 +29,7 @@ class GingerApiHelper
     private function __construct()
     {
         try {
-            $clientOptions = new ClientOptions(endpoint: $this->getEndpoint(), useBundle: $this->isCacertCheck() , apiKey: $this->getApiKey());
+            $clientOptions = new ClientOptions(endpoint: PSPConfig::getEndpoint(), useBundle: $this->isCacertCheck() , apiKey: $this->getApiKey());
             $this->client = new Client(options: $clientOptions);
         } catch (\Exception $e) {
             throw new APIException(message: "Failed to initialize Ginger API client: " . $e->getMessage(), code: $e->getCode(), previous: $e);
@@ -96,66 +96,6 @@ class GingerApiHelper
     }
 
     /**
-     * Retrieves the endpoint URL for the Ginger Payments API.
-     *
-     * @return string
-     */
-    private function getEndpoint(): string
-    {
-        return PSPConfig::ENDPOINT;
-    }
-
-    /**
-     * Retrieves the platform name for the Ginger Payments API.
-     *
-     * @return string
-     */
-    private function getPlatformName(): string
-    {
-        return PSPConfig::PLATFORM_NAME;
-    }
-
-    /**
-     * Retrieves the platform version for the Ginger Payments API.
-     *
-     * @return string
-     */
-    private function getPlatformVersion(): string
-    {
-        return PSPConfig::PLATFORM_VERSION;
-    }
-
-    /**
-     * Retrieves the plugin name for the Ginger Payments API.
-     *
-     * @return string
-     */
-    private function getPluginName(): string
-    {
-        return PSPConfig::PLUGIN_NAME;
-    }
-
-    /**
-     * Retrieves the plugin version for the Ginger Payments API.
-     *
-     * @return string
-     */
-    private function getPluginVersion(): string
-    {
-        return PSPConfig::PLUGIN_VERSION;
-    }
-
-    /**
-     * Retrieves the user agent from the server.
-     *
-     * @return string
-     */
-    private function getUserAgent(): string
-    {
-        return $_SERVER['HTTP_USER_AGENT'];
-    }
-
-    /**
      * Retrieves the extra info from the client for Ginger API.
      *
      * @return ClientEntity
@@ -164,11 +104,11 @@ class GingerApiHelper
     public function getClientExtra(): ClientEntity
     {
         return new ClientEntity(
-            userAgent: $this->getUserAgent(),
-            platformName: $this->getPlatformName(),
-            platformVersion: $this->getPlatformVersion(),
-            pluginName: $this->getPluginName(),
-            pluginVersion: $this->getPluginVersion()
+            userAgent: PSPConfig::getUserAgent(),
+            platformName: PSPConfig::getPlatformName(),
+            platformVersion: PSPConfig::getPluginVersion(),
+            pluginName: PSPConfig::getPluginName(),
+            pluginVersion: PSPConfig::getPluginVersion()
         );
     }
 

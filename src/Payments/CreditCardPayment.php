@@ -3,7 +3,7 @@
 namespace GingerPayments\Payments\Payments;
 
 use GingerPayments\Payments\Helpers\PaymentHelper;
-use GingerPayments\Payments\Interfaces\BasePaymentInterface;
+use GingerPayments\Payments\Interfaces\FactoryInterface\BasePaymentInterface;
 use GingerPluginSdk\Exceptions\APIException;
 use OxidEsales\EshopCommunity\Core\Registry;
 use OxidEsales\EshopCommunity\Application\Model\Order as OxidOrder;
