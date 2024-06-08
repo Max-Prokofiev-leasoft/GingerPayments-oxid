@@ -35,6 +35,12 @@ $aModule = [
     'settings' => [
         [
             'group' => 'gingerpayments_main',
+            'name' => 'gingerpayments_main_info',
+            'type' => 'text',
+            'value' => '',
+        ],
+        [
+            'group' => 'gingerpayments_main',
             'name' => 'gingerpayments_apikey',
             'type' => 'str',
             'value' => '',
@@ -44,6 +50,12 @@ $aModule = [
             'name' => 'gingerpayments_cacert',
             'type' => 'bool',
             'value' => 'false'
+        ],
+        [
+            'group' => 'gingerpayments_additional',
+            'name' => 'gingerpayments_additional_info_text',
+            'type' => 'text',
+            'value' => ''
         ],
         [
             'group' => 'gingerpayments_additional',
