@@ -5,6 +5,8 @@ namespace GingerPayments\Payments\Helpers;
 use GingerPayments\Payments\PSP\PSPConfig;
 use GingerPluginSdk\Client;
 use GingerPluginSdk\Entities\Client as ClientEntity;
+use GingerPluginSdk\Exceptions\CaptureFailedException;
+use GingerPluginSdk\Exceptions\InvalidOrderStatusException;
 use GingerPluginSdk\Properties\ClientOptions;
 use GingerPluginSdk\Entities\Order;
 use GingerPluginSdk\Exceptions\APIException;
@@ -29,7 +31,7 @@ class GingerApiHelper
     private function __construct()
     {
         try {
-            $clientOptions = new ClientOptions(endpoint: PSPConfig::getEndpoint(), useBundle: $this->isCacertCheck() , apiKey: $this->getApiKey());
+            $clientOptions = new ClientOptions(endpoint: PSPConfig::getEndpoint(), useBundle: $this->isCacertCheck(), apiKey: $this->getApiKey());
             $this->client = new Client(options: $clientOptions);
         } catch (\Exception $e) {
             throw new APIException(message: "Failed to initialize Ginger API client: " . $e->getMessage(), code: $e->getCode(), previous: $e);
@@ -68,6 +70,24 @@ class GingerApiHelper
     }
 
     /**
+     * Capture the transaction for a given order.
+     *
+     * @param string $orderId SDK Order ID of the order to capture.
+     * @return bool True if the transaction was captured successfully, otherwise false.
+     * @throws APIException If there is an error with the API during the capture process.
+     * @throws CaptureFailedException If the capture process fails for any reason.
+     * @throws InvalidOrderStatusException If the order status is invalid for capture.
+     */
+    public function captureTransaction(string $orderId): bool
+    {
+        try {
+            return $this->client->captureOrderTransaction($orderId);
+        } catch (APIException $e) {
+            throw new APIException("Error capturing transaction: ". $e->getMessage());
+        }
+    }
+
+    /**
      * Validates the format of the API key to ensure it is safe and correct.
      *
      * @param string $apiKey
@@ -80,6 +100,51 @@ class GingerApiHelper
             !preg_match('/[\'";\-\-]|(\/\*)|(\*\/)|(\b(SELECT|INSERT|UPDATE|DELETE|DROP|UNION|JOIN|CREATE|ALTER|TRUNCATE|REPLACE)\b)/i', $apiKey) &&
             !preg_match('/<script|<\/script>|javascript:/i', $apiKey);
     }
+
+    /**
+     *  Checks if the CACert setting is enabled.
+     *
+     *  This method retrieves the boolean value of the 'gingerpayments_cacert' setting from the module settings.
+     * @return bool
+     * - True if the CACert setting is enabled, false otherwise.
+     */
+    private function isCacertCheck(): bool
+    {
+        $moduleSettingService = ContainerFacade::get(ModuleSettingServiceInterface::class);
+        return $moduleSettingService->getBoolean('gingerpayments_cacert', 'gingerpayments');
+
+    }
+
+    /**
+     * Check if the transaction for a given order is capturable.
+     *
+     * @param string $orderId SDK Order ID of the order to capture.
+     * @return bool True if the transaction is capturable, otherwise false.
+     * @throws \Exception If there is an error while retrieving the order.
+     */
+    public function isCapturable(string $orderId): bool
+    {
+        $order = $this->client->getOrder($orderId);
+        return $order->getCurrentTransaction()->isCapturable();
+    }
+
+    /**
+     * Retrieves and validates the API key from the module settings.
+     *
+     * @return string
+     * @throws \InvalidArgumentException
+     */
+    public function getApiKey(): string
+    {
+        $moduleSettingService = ContainerFacade::get(ModuleSettingServiceInterface::class);
+        $apiKey = $moduleSettingService->getString('gingerpayments_apikey', 'gingerpayments')->toString();
+
+        if (!$this->isValidApiKeyFormat(apiKey: $apiKey)) {
+            throw new \InvalidArgumentException('Invalid API key format.');
+        }
+        return $apiKey;
+    }
+
 
     /**
      * Retrieves an order from the Ginger API by order ID.
@@ -106,40 +171,9 @@ class GingerApiHelper
         return new ClientEntity(
             userAgent: PSPConfig::getUserAgent(),
             platformName: PSPConfig::getPlatformName(),
-            platformVersion: PSPConfig::getPluginVersion(),
+            platformVersion: PSPConfig::getPlatformVersion(),
             pluginName: PSPConfig::getPluginName(),
             pluginVersion: PSPConfig::getPluginVersion()
         );
-    }
-
-    /**
-     *  Checks if the CACert setting is enabled.
-     *
-     *  This method retrieves the boolean value of the 'gingerpayments_cacert' setting from the module settings.
-     * @return bool
-     * - True if the CACert setting is enabled, false otherwise.
-     */
-    private function isCacertCheck(): bool
-    {
-        $moduleSettingService = ContainerFacade::get(ModuleSettingServiceInterface::class);
-        return $moduleSettingService->getBoolean('gingerpayments_cacert', 'gingerpayments');
-
-    }
-
-    /**
-     * Retrieves and validates the API key from the module settings.
-     *
-     * @return string
-     * @throws \InvalidArgumentException
-     */
-    public function getApiKey(): string
-    {
-        $moduleSettingService = ContainerFacade::get(ModuleSettingServiceInterface::class);
-        $apiKey = $moduleSettingService->getString('gingerpayments_apikey', 'gingerpayments')->toString();
-
-        if (!$this->isValidApiKeyFormat(apiKey: $apiKey)) {
-            throw new \InvalidArgumentException('Invalid API key format.');
-        }
-        return $apiKey;
     }
 }

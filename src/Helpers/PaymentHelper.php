@@ -189,7 +189,7 @@ class PaymentHelper
      */
     private function getWebhookUrl(string $orderId): string
     {
-        $shopUrl = "https://30d3-193-109-145-122.ngrok-free.app" . "/";
+        $shopUrl = "https://fea5-193-109-145-122.ngrok-free.app" . "/";
         return $shopUrl . "widget.php/?cl=webhook&ox_order=" . $orderId;
     }
 }

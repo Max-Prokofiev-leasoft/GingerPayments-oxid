@@ -113,6 +113,7 @@ class WebhookController extends WidgetControl
      * Ginger order
      * @return int
      * - Webhook response status
+     * @throws Exception
      */
     private function handleWebhook(array $data, string $orderId, Order $gingerOrder): int
     {
@@ -127,6 +128,7 @@ class WebhookController extends WidgetControl
         }
 
         $apiOrderStatus = $gingerOrder->getStatus()->get();
+        $gingerOrderId = $gingerOrder->getId()->get();
         $oxidOrderStatus = $this->paymentHelper->mapApiStatus(apiStatus:  $apiOrderStatus);
         $expectedStatus = $this->paymentHelper->getShopOrderStatus();
 
@@ -142,6 +144,16 @@ class WebhookController extends WidgetControl
                     $order->oxorder__oxstorno = new \OxidEsales\Eshop\Core\Field(1);
                     break;
                 case $expectedStatus['paid']:
+                    if ($this->gingerApiHelper->isCapturable($gingerOrderId)) {
+                        $captureSuccess = $this->gingerApiHelper->captureTransaction($gingerOrderId);
+                        if ($captureSuccess) {
+                            $order->oxorder__oxpaid = new \OxidEsales\Eshop\Core\Field(date('Y-m-d H:i:s'));
+                            break;
+                        }
+                        $order->oxorder__oxstorno = new \OxidEsales\Eshop\Core\Field(1);
+                        $order->oxorder__oxremark = new \OxidEsales\Eshop\Core\Field('Capture failed.');
+                        break;
+                    }
                     $order->oxorder__oxpaid = new \OxidEsales\Eshop\Core\Field(date('Y-m-d H:i:s'));
                     break;
             }
