@@ -58,8 +58,14 @@ final class ModuleEvents
             'gingerpaymentsideal' => ['OXID' => 'gingerpaymentsideal',
                 'OXDESC_DE' => 'IDeal',
                 'OXDESC_EN' => 'IDeal',
-                'OXLONGDESC_DE' => 'IDeal-Zahlungsmethode',
-                'OXLONGDESC_EN' => 'IDeal payment method'
+                'OXLONGDESC_DE' => 'iDEAL bietet eine schnelle, sichere und unkomplizierte Möglichkeit, online mit niederländischen Banken zu bezahlen.',
+                'OXLONGDESC_EN' => 'iDEAL provides a fast, secure, and straightforward way to pay online using Dutch banks.'
+            ],
+            'gingerpaymentsgooglepay' => ['OXID' => 'gingerpaymentsgooglepay',
+                'OXDESC_DE' => 'Google Pay',
+                'OXDESC_EN' => 'Google Pay',
+                'OXLONGDESC_EN' => 'GooglePay offers a fast, secure, and simple way to pay online.',
+                'OXLONGDESC_DE' => 'GooglePay bietet eine schnelle, sichere und einfache Möglichkeit, online zu bezahlen.'
             ],
         ];
         $oLangArray = \OxidEsales\Eshop\Core\Registry::getLang()->getLanguageArray();
@@ -90,7 +96,8 @@ final class ModuleEvents
     {
         $aPayments = [
             'gingerpaymentscreditcard',
-            'gingerpaymentsideal'
+            'gingerpaymentsideal',
+            'gingerpaymentsgooglepay'
         ];
         $oPayment = oxNew(\OxidEsales\Eshop\Application\Model\Payment::class);
         foreach ($aPayments as $sPaymentOxid) {
