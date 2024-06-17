@@ -21,7 +21,7 @@ class GooglePayPayment implements  BasePaymentInterface
     }
 
     /**
-     * Handles the payment process for an iDEAL payment.
+     * Handles the payment process for an Google Pay payment.
      *
      * @param float $amount
      * Total amount for the order

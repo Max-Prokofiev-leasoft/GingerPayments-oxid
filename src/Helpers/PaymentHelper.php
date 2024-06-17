@@ -90,7 +90,8 @@ class PaymentHelper
         $paymentMethods = [
             'gingerpaymentsideal',
             'gingerpaymentscreditcard',
-            'gingerpaymentsgooglepay'
+            'gingerpaymentsgooglepay',
+            'gingerpaymentsapplepay',
         ];
 
         return in_array($paymentId, $paymentMethods, true);
@@ -110,6 +111,7 @@ class PaymentHelper
             'gingerpaymentscreditcard' => 'credit-card',
             'gingerpaymentsideal' => 'ideal',
             'gingerpaymentsgooglepay' => 'google-pay',
+            'gingerpaymentsapplepay' => 'apple-pay',
             default => $paymentId,
         };
     }
