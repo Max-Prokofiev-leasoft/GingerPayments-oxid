@@ -34,7 +34,7 @@ class GingerApiHelper
             $clientOptions = new ClientOptions(endpoint: PSPConfig::getEndpoint(), useBundle: $this->isCacertCheck(), apiKey: $this->getApiKey());
             $this->client = new Client(options: $clientOptions);
         } catch (\Exception $e) {
-            throw new APIException(message: "Failed to initialize Ginger API client: " . $e->getMessage(), code: $e->getCode(), previous: $e);
+            throw new APIException(message: "Failed to initialize API client: " . $e->getMessage(), code: $e->getCode(), previous: $e);
         }
     }
 
