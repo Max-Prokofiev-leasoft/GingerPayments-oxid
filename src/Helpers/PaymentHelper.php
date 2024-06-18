@@ -72,7 +72,7 @@ class PaymentHelper
           return $this->gingerApiHelper->sendOrder(order: $orderSdk->buildOrder())->getPaymentUrl();
         } catch (Exception $e)
         {
-            $this->getGingerError($e);
+            $this->getGingerError($e->getMessage());
             Registry::getLogger()->error("Error message: $e");
         }
     }

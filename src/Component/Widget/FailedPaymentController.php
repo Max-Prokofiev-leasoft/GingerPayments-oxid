@@ -75,7 +75,8 @@ class FailedPaymentController extends WidgetControl
                 <div style='display: inline-block; text-align: left; max-width: 600px; width: 100%;'>
                     <h1 style='color: #d9534f;'>Payment Failed</h1>
                     <p style='color: #5f5f5f;'>Sorry, we can't proceed your payment right now. Please try again later.</p>
-                    <p style='color: #5f5f5f;'>Error message: <br> '$error'</p>
+                    <p style='color: #5f5f5f;'>Error message: </p>
+                    <pre style='background-color: #f8f8f8; padding: 10px; border: 1px solid #ddd; border-radius: 5px; color: #d9534f; overflow-wrap: break-word; word-wrap: break-word; white-space: pre-wrap;'>$error</pre>
                     <button onclick='window.location.href=\"" . $this->getCheckoutUrl() . "\"' style='
                         display: inline-block;
                         padding: 10px 20px;
