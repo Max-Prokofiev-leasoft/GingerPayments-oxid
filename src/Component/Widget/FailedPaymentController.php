@@ -16,7 +16,7 @@ class FailedPaymentController extends WidgetControl
         parent::__construct();
         $error = Registry::getRequest()->getRequestParameter('error_message');
         // Output the styled error message
-        echo $this->getStyledErrorMessage($error);
+        echo $this->getStyledErrorMessage(error: $error);
     }
 
     /**
@@ -68,7 +68,7 @@ class FailedPaymentController extends WidgetControl
      * Error message from the payment process
      * @return string
      */
-    private function getStyledErrorMessage($error): string
+    private function getStyledErrorMessage(string $error): string
     {
         return "
             <div style='text-align: center; padding: 50px;'>
