@@ -54,7 +54,7 @@ class PaymentHelper
      * OXID order
      * @param string $paymentMethod
      * Payment method name
-     * @return string
+     * @return string - URL to process payment
      * - URL to process payment
      */
     public function processPayment(float $totalAmount, OxidOrder $order, string $paymentMethod): string
@@ -72,7 +72,7 @@ class PaymentHelper
           return $this->gingerApiHelper->sendOrder(order: $orderSdk->buildOrder())->getPaymentUrl();
         } catch (Exception $e)
         {
-            $this->getGingerError();
+            $this->getGingerError($e);
             Registry::getLogger()->error("Error message: $e");
         }
     }
@@ -196,10 +196,10 @@ class PaymentHelper
      *
      * @return void
      */
-    private function getGingerError(): void
+    private function getGingerError($e): void
     {
         Registry::getSession()->destroy();
-        Registry::getUtils()->redirect('widget.php?cl=failedpayment');
+        Registry::getUtils()->redirect("widget.php?cl=failedpayment&error_message=$e");
 
     }
     /**

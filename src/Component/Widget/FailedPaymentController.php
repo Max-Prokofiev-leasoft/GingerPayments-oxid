@@ -14,9 +14,9 @@ class FailedPaymentController extends WidgetControl
     public function __construct()
     {
         parent::__construct();
-
+        $error = Registry::getRequest()->getRequestParameter('error_message');
         // Output the styled error message
-        echo $this->getStyledErrorMessage();
+        echo $this->getStyledErrorMessage($error);
     }
 
     /**
@@ -64,23 +64,32 @@ class FailedPaymentController extends WidgetControl
 
     /**
      * Get the styled error message HTML.
+     * @param string $error
+     * Error message from the payment process
      * @return string
      */
-    private function getStyledErrorMessage(): string
+    private function getStyledErrorMessage($error): string
     {
         return "
             <div style='text-align: center; padding: 50px;'>
                 <div style='display: inline-block; text-align: left; max-width: 600px; width: 100%;'>
                     <h1 style='color: #d9534f;'>Payment Failed</h1>
-                    <p style='color: #5f5f5f;'>Sorry, we can't proceed with your payment right now. Please try again later.</p>
-                    <p style='color: #5f5f5f;'>You will be redirected to the checkout page in a few seconds.</p>
+                    <p style='color: #5f5f5f;'>Sorry, we can't proceed your payment right now. Please try again later.</p>
+                    <p style='color: #5f5f5f;'>Error message: <br> '$error'</p>
+                    <button onclick='window.location.href=\"" . $this->getCheckoutUrl() . "\"' style='
+                        display: inline-block;
+                        padding: 10px 20px;
+                        margin-top: 20px;
+                        font-size: 16px;
+                        color: #fff;
+                        background-color: #007bff;
+                        border: none;
+                        border-radius: 5px;
+                        text-decoration: none;
+                        cursor: pointer;
+                    '>Return to Shop</button>
                 </div>
             </div>
-            <script>
-                setTimeout(function() {
-                    window.location.href = '" . $this->getCheckoutUrl() . "';
-                }, 3000);
-            </script>
             <style>
                 body {
                     background-color: #f8f9fa;
