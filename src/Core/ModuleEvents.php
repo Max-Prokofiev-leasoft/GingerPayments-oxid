@@ -58,8 +58,21 @@ final class ModuleEvents
             'gingerpaymentsideal' => ['OXID' => 'gingerpaymentsideal',
                 'OXDESC_DE' => 'IDeal',
                 'OXDESC_EN' => 'IDeal',
-                'OXLONGDESC_DE' => 'IDeal-Zahlungsmethode',
-                'OXLONGDESC_EN' => 'IDeal payment method'
+                'OXLONGDESC_DE' => 'iDEAL bietet eine schnelle, sichere und unkomplizierte Möglichkeit, online mit niederländischen Banken zu bezahlen.',
+                'OXLONGDESC_EN' => 'iDEAL provides a fast, secure, and straightforward way to pay online using Dutch banks.'
+            ],
+            'gingerpaymentsgooglepay' => ['OXID' => 'gingerpaymentsgooglepay',
+                'OXDESC_DE' => 'Google Pay',
+                'OXDESC_EN' => 'Google Pay',
+                'OXLONGDESC_EN' => 'GooglePay offers a fast, secure, and simple way to pay online.',
+                'OXLONGDESC_DE' => 'GooglePay bietet eine schnelle, sichere und einfache Möglichkeit, online zu bezahlen.'
+            ],
+            'gingerpaymentsapplepay' => ['OXID' => 'gingerpaymentsapplepay',
+                'OXDESC_DE' => 'Apple Pay',
+                'OXDESC_EN' => 'Apple Pay',
+                'OXLONGDESC_EN' => 'Experience seamless payments with ApplePay. Enjoy the convenience of paying with just a touch or a glance, all while keeping your financial information secure. Perfect for quick checkouts and ensuring your privacy.',
+                'OXLONGDESC_DE' => 'Erleben Sie nahtlose Zahlungen mit ApplePay. Genießen Sie die Bequemlichkeit, mit nur einer Berührung oder einem Blick zu bezahlen, und behalten Sie dabei Ihre finanziellen Informationen sicher. Ideal für schnelle Checkouts und zum Schutz Ihrer Privatsphäre.'
+
             ],
         ];
         $oLangArray = \OxidEsales\Eshop\Core\Registry::getLang()->getLanguageArray();
@@ -90,7 +103,9 @@ final class ModuleEvents
     {
         $aPayments = [
             'gingerpaymentscreditcard',
-            'gingerpaymentsideal'
+            'gingerpaymentsideal',
+            'gingerpaymentsgooglepay',
+            'gingerpaymentsapplepay'
         ];
         $oPayment = oxNew(\OxidEsales\Eshop\Application\Model\Payment::class);
         foreach ($aPayments as $sPaymentOxid) {

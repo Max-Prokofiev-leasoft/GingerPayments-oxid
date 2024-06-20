@@ -71,8 +71,7 @@ class ModuleOrderController extends OrderController
                 $order = oxNew(Order::class);
                 $iSuccess = $order->finalizeOrder($basket, $user);
                 $user->onOrderExecute($basket, $iSuccess);
-
-                if ($iSuccess === Order::ORDER_STATE_OK && $this->paymentHelper->isGingerPaymentMethod(paymentId: $order->oxorder__oxpaymenttype->value)) {
+                if (($iSuccess === Order::ORDER_STATE_OK) && $this->paymentHelper->isGingerPaymentMethod(paymentId: $order->oxorder__oxpaymenttype->value)) {
                     $apiUrl = $session->getVariable('payment_url');
                     Registry::getUtils()->redirect($apiUrl, true, 302);
                 }

@@ -27,6 +27,7 @@ $aModule = [
     ],
     'controllers' => [
         'webhook' => \GingerPayments\Payments\Component\Widget\WebhookController::class,
+        'failedpayment' => \GingerPayments\Payments\Component\Widget\FailedPaymentController::class,
     ],
     'events' => [
         'onActivate' => '\GingerPayments\Payments\Core\ModuleEvents::onActivate',

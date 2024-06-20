@@ -6,14 +6,9 @@ use GingerPayments\Payments\Helpers\PaymentHelper;
 use GingerPayments\Payments\Interfaces\FactoryInterface\BasePaymentInterface;
 use GingerPluginSdk\Exceptions\APIException;
 use OxidEsales\Eshop\Core\Exception\LanguageNotFoundException;
-use OxidEsales\EshopCommunity\Core\Registry;
 use OxidEsales\EshopCommunity\Application\Model\Order as OxidOrder;
 
-/**
- * Class CreditCardPayment
- * Handles the credit card payment process using the Ginger Payments API.
- */
-class CreditCardPayment implements BasePaymentInterface
+class GooglePayPayment implements  BasePaymentInterface
 {
     private PaymentHelper $paymentHelper;
 
@@ -26,7 +21,7 @@ class CreditCardPayment implements BasePaymentInterface
     }
 
     /**
-     * Handles the payment process for a Credit-card payment.
+     * Handles the payment process for an Google Pay payment.
      *
      * @param float $amount
      * Total amount for the order
@@ -37,11 +32,10 @@ class CreditCardPayment implements BasePaymentInterface
      */
     public function handlePayment(float $amount, OxidOrder $order): string
     {
-        return
-            $this->paymentHelper->processPayment(
+        return $this->paymentHelper->processPayment(
             totalAmount: $amount,
             order: $order,
-            paymentMethod: "credit-card"
+            paymentMethod: "google-pay",
         );
     }
 }

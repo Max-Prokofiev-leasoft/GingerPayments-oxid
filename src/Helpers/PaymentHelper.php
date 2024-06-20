@@ -2,6 +2,7 @@
 
 namespace GingerPayments\Payments\Helpers;
 
+use Exception;
 use GingerPayments\Payments\Builders\OrderBuilder;
 use GingerPayments\Payments\Component\StrategyComponentRegister;
 use GingerPayments\Payments\Interfaces\StrategyInterface\ExampleGetWebhookUrlStrategy;
@@ -53,10 +54,8 @@ class PaymentHelper
      * OXID order
      * @param string $paymentMethod
      * Payment method name
-     * @return string
+     * @return string - URL to process payment
      * - URL to process payment
-     * @throws APIException
-     * @throws LanguageNotFoundException
      */
     public function processPayment(float $totalAmount, OxidOrder $order, string $paymentMethod): string
     {
@@ -69,7 +68,13 @@ class PaymentHelper
             returnUrl: $returnUrl,
             webhookUrl: $webhookUrl
         );
-        return $this->gingerApiHelper->sendOrder(order: $orderSdk->buildOrder())->getPaymentUrl();
+        try {
+          return $this->gingerApiHelper->sendOrder(order: $orderSdk->buildOrder())->getPaymentUrl();
+        } catch (Exception $e)
+        {
+            $this->getGingerError($e->getMessage());
+            Registry::getLogger()->error("Error message: $e");
+        }
     }
 
     /**
@@ -84,7 +89,9 @@ class PaymentHelper
     {
         $paymentMethods = [
             'gingerpaymentsideal',
-            'gingerpaymentscreditcard'
+            'gingerpaymentscreditcard',
+            'gingerpaymentsgooglepay',
+            'gingerpaymentsapplepay',
         ];
 
         return in_array($paymentId, $paymentMethods, true);
@@ -103,6 +110,8 @@ class PaymentHelper
         return match ($paymentId) {
             'gingerpaymentscreditcard' => 'credit-card',
             'gingerpaymentsideal' => 'ideal',
+            'gingerpaymentsgooglepay' => 'google-pay',
+            'gingerpaymentsapplepay' => 'apple-pay',
             default => $paymentId,
         };
     }
@@ -180,6 +189,20 @@ class PaymentHelper
     }
 
     /**
+     * Handle Ginger payment error.
+     *
+     * This method clears the current session and redirects to the failed payment page.
+     * It is used to handle scenarios where the Ginger payment process fails.
+     *
+     * @return void
+     */
+    private function getGingerError($e): void
+    {
+        Registry::getSession()->destroy();
+        Registry::getUtils()->redirect("widget.php?cl=failedpayment&error_message=$e");
+
+    }
+    /**
      * Retrieves the webhook URL for SDK Order.
      *
      * @param string $orderId
@@ -189,7 +212,7 @@ class PaymentHelper
      */
     private function getWebhookUrl(string $orderId): string
     {
-        $shopUrl = "https://30d3-193-109-145-122.ngrok-free.app" . "/";
+        $shopUrl = $this->getShopUrl();
         return $shopUrl . "widget.php/?cl=webhook&ox_order=" . $orderId;
     }
 }
